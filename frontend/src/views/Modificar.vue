@@ -2,8 +2,8 @@
   <div>
     <Titulo />
     <Navbar />
-    <h2>Esta es la página del Dashboard</h2>
-    <!-- Resto del contenido del Dashboard -->
+    <h2>Esta es la página para Modificar</h2>
+    <!-- Resto del contenido de la página -->
   </div>
 </template>
 
