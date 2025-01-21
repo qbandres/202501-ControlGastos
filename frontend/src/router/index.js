@@ -8,6 +8,7 @@ import { useUserStore } from "@/stores/userStore";
 import Login from "@/views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Modificar from "@/views/Modificar.vue";
+import Graphics from "@/views/Graphics.vue"; // Importa la nueva vista de gráficos
 
 // Función para verificar si el usuario está autenticado
 const requireAuth = (to, from, next) => {
@@ -33,6 +34,12 @@ const routes = [
   {
     path: "/modificar", // Ruta para Modificar
     component: Modificar, // Componente que se renderizará
+    beforeEnter: requireAuth, // Aplica la función de autenticación
+  },
+  {
+    path: "/graficos", // Ruta para Gráficos
+    name: "Graficos",
+    component: Graphics, // Componente de gráficos
     beforeEnter: requireAuth, // Aplica la función de autenticación
   },
 ];

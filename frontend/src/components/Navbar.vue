@@ -3,6 +3,7 @@
     <ul>
       <li><router-link to="/dashboard">Inicio</router-link></li>
       <li><router-link to="/modificar">Modificar</router-link></li>
+      <li><router-link to="/graficos">Gráficos</router-link></li>
       <li><a href="#" @click="logout">Cerrar sesión</a></li>
     </ul>
   </nav>

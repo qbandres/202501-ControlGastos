@@ -3,6 +3,7 @@ from app.routes.login import router as login_router
 from app.routes.tablaGastos import router as gastos_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import modificar
+from app.routes import graficos
 
 app = FastAPI()
 
@@ -19,3 +20,4 @@ app.add_middleware(
 app.include_router(login_router)
 app.include_router(gastos_router)  # Asegúrate de que este router esté incluido
 app.include_router(modificar.router, prefix="/modificar", tags=["modificar"])
+app.include_router(graficos.router, prefix="/graficos", tags=["Graficos"])
