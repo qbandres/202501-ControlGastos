@@ -49,7 +49,12 @@
           <td>{{ gasto.tipo }}</td>
           <td>{{ gasto.locacion }}</td>
           <td>{{ new Date(gasto.fecha).toLocaleDateString() }}</td>
-          <td>{{ gasto.observaciones }}</td>
+          <td>
+            <button @click="toggleObservacion(gasto.id)">
+              {{ showObservacion[gasto.id] ? "Ocultar" : "Mostrar" }}
+            </button>
+            <div v-if="showObservacion[gasto.id]">{{ gasto.observaciones }}</div>
+          </td>
           <td>{{ gasto.metodo }}</td>
         </tr>
       </tbody>
@@ -72,47 +77,73 @@ export default {
         rango_cantidad_min: null,
         rango_cantidad_max: null,
       },
+      showObservacion: {}, // Estado para controlar qué observaciones están visibles
     };
   },
-      methods: {
-      async fetchGastos() {
-        try {
-          const response = await axios.get("http://localhost:8000/tabla-gastos");
-          this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
-        } catch (error) {
-          console.error("Error al cargar los gastos:", error);
-        }
-      },
-      async applyFilters() {
-        // Procesa y limpia los datos antes de enviarlos
-        const cleanedFilters = {
-          usuario: this.filters.usuario || null, // Si está vacío, lo envía como null
-          clase: this.filters.clase || null,
-          rango_fecha_inicio: this.filters.rango_fecha_inicio || null,
-          rango_fecha_fin: this.filters.rango_fecha_fin || null,
-          rango_cantidad_min: this.filters.rango_cantidad_min !== null ? Number(this.filters.rango_cantidad_min) : null,
-          rango_cantidad_max: this.filters.rango_cantidad_max !== null ? Number(this.filters.rango_cantidad_max) : null,
-        };
+  methods: {
+    async fetchGastos() {
+      try {
+        const response = await axios.get("http://localhost:8000/tabla-gastos");
+        this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
 
-        try {
-          const response = await axios.post("http://localhost:8000/tabla-gastos", cleanedFilters);
-          this.gastos = response.data.data; // Actualiza la tabla con los resultados filtrados
-        } catch (error) {
-          console.error("Error al aplicar filtros:", error);
-        }
-      },
-      resetFilters() {
-        this.filters = {
-          usuario: "",
-          clase: "",
-          rango_fecha_inicio: "",
-          rango_fecha_fin: "",
-          rango_cantidad_min: null,
-          rango_cantidad_max: null,
-        };
-        this.fetchGastos(); // Recarga los últimos 20 gastos
-      },
+        // Inicializa el estado de observaciones para todas las filas
+        this.showObservacion = this.gastos.reduce((acc, gasto) => {
+          acc[gasto.id] = false; // Por defecto, todas las observaciones están ocultas
+          return acc;
+        }, {});
+      } catch (error) {
+        console.error("Error al cargar los gastos:", error);
+      }
     },
+    toggleObservacion(id) {
+      // Alterna la visibilidad de la observación para la fila específica
+      this.showObservacion[id] = !this.showObservacion[id];
+    },
+    async applyFilters() {
+      // Procesa y limpia los datos antes de enviarlos
+      const cleanedFilters = {
+        usuario: this.filters.usuario || null, // Si está vacío, lo envía como null
+        clase: this.filters.clase || null,
+        rango_fecha_inicio: this.filters.rango_fecha_inicio || null,
+        rango_fecha_fin: this.filters.rango_fecha_fin || null,
+        rango_cantidad_min:
+          this.filters.rango_cantidad_min !== null
+            ? Number(this.filters.rango_cantidad_min)
+            : null,
+        rango_cantidad_max:
+          this.filters.rango_cantidad_max !== null
+            ? Number(this.filters.rango_cantidad_max)
+            : null,
+      };
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/tabla-gastos",
+          cleanedFilters
+        );
+        this.gastos = response.data.data; // Actualiza la tabla con los resultados filtrados
+
+        // Actualiza el estado de observaciones después de aplicar los filtros
+        this.showObservacion = this.gastos.reduce((acc, gasto) => {
+          acc[gasto.id] = false;
+          return acc;
+        }, {});
+      } catch (error) {
+        console.error("Error al aplicar filtros:", error);
+      }
+    },
+    resetFilters() {
+      this.filters = {
+        usuario: "",
+        clase: "",
+        rango_fecha_inicio: "",
+        rango_fecha_fin: "",
+        rango_cantidad_min: null,
+        rango_cantidad_max: null,
+      };
+      this.fetchGastos(); // Recarga los últimos 20 gastos
+    },
+  },
   async created() {
     await this.fetchGastos(); // Carga inicial de los últimos 20 gastos
   },
