@@ -58,19 +58,42 @@
       <h3>Modificar Gasto</h3>
       <form @submit.prevent="confirmEdit">
         <label>Usuario:</label>
-        <input v-model="selectedGasto.usuario" type="text" />
+        <select v-model="selectedGasto.usuario">
+          <option v-for="usuario in usuarios" :key="usuario" :value="usuario">
+            {{ usuario }}
+          </option>
+        </select>
 
         <label>Clase:</label>
-        <input v-model="selectedGasto.clase" type="text" />
+        <select v-model="selectedGasto.clase">
+          <option v-for="clase in clases" :key="clase" :value="clase">
+            {{ clase }}
+          </option>
+        </select>
 
         <label>Asignación:</label>
-        <input v-model="selectedGasto.asignacion" type="text" />
+        <select v-model="selectedGasto.asignacion">
+          <option v-for="asignacion in asignaciones" :key="asignacion" :value="asignacion">
+            {{ asignacion }}
+          </option>
+        </select>
 
         <label>Cantidad:</label>
         <input v-model="selectedGasto.cantidad" type="number" step="any" />
 
         <label>Tipo:</label>
-        <input v-model="selectedGasto.tipo" type="text" />
+        <select v-model="selectedGasto.tipo">
+          <option v-for="tipo in tipos" :key="tipo" :value="tipo">
+            {{ tipo }}
+          </option>
+        </select>
+
+        <label>Método:</label>
+        <select v-model="selectedGasto.metodo">
+          <option v-for="metodo in metodos" :key="metodo" :value="metodo">
+            {{ metodo }}
+          </option>
+        </select>
 
         <label>Fecha:</label>
         <input v-model="selectedGasto.fecha" type="date" />
@@ -102,7 +125,45 @@ export default {
         rango_fecha_inicio: "",
         rango_fecha_fin: "",
       },
-      selectedGasto: null, // Instancia seleccionada para modificar
+      selectedGasto: {
+        usuario: "YP",
+        clase: "",
+        asignacion: "",
+        cantidad: 0,
+        tipo: "",
+        metodo: "Efectivo",
+        fecha: new Date().toISOString().slice(0, 10), // Fecha actual
+        observaciones: "",
+      }, // Instancia seleccionada para modificar
+      usuarios: ["AQ", "YP"],
+      clases: [
+        "Educación",
+        "Salud",
+        "Vestimenta",
+        "Alimentos",
+        "Recreacion",
+        "Sabina",
+        "Isaac",
+        "Tecnologia",
+        "Servicios",
+        "Restaurant",
+        "transf_YP",
+        "centroComercial",
+        "Combustible",
+        "Gustitos",
+      ],
+      asignaciones: [
+        "Andrés",
+        "Yovana",
+        "Alonso",
+        "Lucia",
+        "Claudia",
+        "Fam_Andres",
+        "Fam_QP",
+        "Fam_Yovana",
+      ],
+      tipos: ["Ingreso", "Egreso"],
+      metodos: ["Efectivo", "Tarjeta"],
     };
   },
   methods: {
