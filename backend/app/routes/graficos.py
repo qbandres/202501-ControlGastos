@@ -1,44 +1,45 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy import func, Date, cast
 from app.database.connection import get_db
 from app.models.datagastos import ControlGastos
-from typing import Optional, List, Dict
 
 router = APIRouter()
 
-# Modelo para validar los datos entrantes
-class XYChartRequest(BaseModel):
+class XYDataRequest(BaseModel):
     x_axis: str
     y_axis: str
-    filters: Optional[Dict] = None  # Filtros opcionales
+    filters: dict
 
 @router.post("/x-y")
-def get_xy_data(request: XYChartRequest, db: Session = Depends(get_db)):
+def get_xy_data(data: XYDataRequest, db: Session = Depends(get_db)):
     try:
-        # Base de la consulta
-        query = db.query(ControlGastos)
+        query = db.query(
+            getattr(ControlGastos, data.x_axis).label("x"),  # Eje X
+            func.sum(getattr(ControlGastos, data.y_axis)).label("y")  # Sumar valores del eje Y
+        )
 
-        # Aplicar filtros si existen
-        if request.filters:
-            if "fecha" in request.filters:
-                fecha_filtro = request.filters["fecha"]
-                if "start" in fecha_filtro:
-                    query = query.filter(ControlGastos.fecha >= fecha_filtro["start"])
-                if "end" in fecha_filtro:
-                    query = query.filter(ControlGastos.fecha <= fecha_filtro["end"])
+        # Aplicar filtros
+        filters = data.filters
+        if "fecha" in filters:
+            if "start" in filters["fecha"]:
+                query = query.filter(
+                    ControlGastos.fecha >= cast(filters["fecha"]["start"], Date)
+                )
+            if "end" in filters["fecha"]:
+                query = query.filter(
+                    ControlGastos.fecha <= cast(filters["fecha"]["end"], Date)
+                )
 
-            if "clase" in request.filters:
-                query = query.filter(ControlGastos.clase.in_(request.filters["clase"]))
+        # Agrupar por el eje X y ordenar
+        query = query.group_by(getattr(ControlGastos, data.x_axis)).order_by(getattr(ControlGastos, data.x_axis))
 
-        # Obtener datos de las columnas X e Y
-        data = query.with_entities(
-            getattr(ControlGastos, request.x_axis),
-            getattr(ControlGastos, request.y_axis),
-        ).all()
+        # Obtener datos agrupados
+        data_points = query.all()
 
-        # Formatear los datos para el gráfico
-        formatted_data = [{"x": row[0], "y": row[1]} for row in data]
+        # Formatear datos para el gráfico
+        formatted_data = [{"x": row.x, "y": row.y} for row in data_points]
 
         return {"status": "success", "data": formatted_data}
     except Exception as e:
