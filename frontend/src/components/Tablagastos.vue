@@ -1,6 +1,29 @@
 <template>
   <div>
-    <h2>Últimos 20 Gastos (Ordenados por Fecha)</h2>
+    <h2>Gastos</h2>
+
+    <!-- Filtros -->
+    <div class="filtros">
+      <label>Usuario:</label>
+      <input v-model="filters.usuario" type="text" placeholder="Filtrar por usuario" />
+
+      <label>Clase:</label>
+      <input v-model="filters.clase" type="text" placeholder="Filtrar por clase" />
+
+      <label>Desde:</label>
+      <input v-model="filters.rango_fecha_inicio" type="date" />
+
+      <label>Hasta:</label>
+      <input v-model="filters.rango_fecha_fin" type="date" />
+
+      <label>Cantidad Mínima:</label>
+      <input v-model="filters.rango_cantidad_min" type="number" placeholder="Mínima" />
+
+      <button @click="applyFilters">Aplicar Filtros</button>
+      <button @click="resetFilters">Restablecer</button>
+    </div>
+
+    <!-- Tabla de Resultados -->
     <table>
       <thead>
         <tr>
@@ -41,16 +64,57 @@ export default {
   data() {
     return {
       gastos: [], // Lista de gastos recibida del backend
+      filters: {
+        usuario: "",
+        clase: "",
+        rango_fecha_inicio: "",
+        rango_fecha_fin: "",
+        rango_cantidad_min: null,
+        rango_cantidad_max: null,
+      },
     };
   },
+      methods: {
+      async fetchGastos() {
+        try {
+          const response = await axios.get("http://localhost:8000/tabla-gastos");
+          this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
+        } catch (error) {
+          console.error("Error al cargar los gastos:", error);
+        }
+      },
+      async applyFilters() {
+        // Procesa y limpia los datos antes de enviarlos
+        const cleanedFilters = {
+          usuario: this.filters.usuario || null, // Si está vacío, lo envía como null
+          clase: this.filters.clase || null,
+          rango_fecha_inicio: this.filters.rango_fecha_inicio || null,
+          rango_fecha_fin: this.filters.rango_fecha_fin || null,
+          rango_cantidad_min: this.filters.rango_cantidad_min !== null ? Number(this.filters.rango_cantidad_min) : null,
+          rango_cantidad_max: this.filters.rango_cantidad_max !== null ? Number(this.filters.rango_cantidad_max) : null,
+        };
+
+        try {
+          const response = await axios.post("http://localhost:8000/tabla-gastos", cleanedFilters);
+          this.gastos = response.data.data; // Actualiza la tabla con los resultados filtrados
+        } catch (error) {
+          console.error("Error al aplicar filtros:", error);
+        }
+      },
+      resetFilters() {
+        this.filters = {
+          usuario: "",
+          clase: "",
+          rango_fecha_inicio: "",
+          rango_fecha_fin: "",
+          rango_cantidad_min: null,
+          rango_cantidad_max: null,
+        };
+        this.fetchGastos(); // Recarga los últimos 20 gastos
+      },
+    },
   async created() {
-    try {
-      // Solicita los datos al backend
-      const response = await axios.get("http://localhost:8000/tabla-gastos");
-      this.gastos = response.data.data;
-    } catch (error) {
-      console.error("Error al cargar los gastos:", error);
-    }
+    await this.fetchGastos(); // Carga inicial de los últimos 20 gastos
   },
 };
 </script>
