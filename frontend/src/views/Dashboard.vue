@@ -91,6 +91,7 @@ export default {
 </script>
 
 <style>
+/* Estilo base para las tablas */
 h2 {
   margin-bottom: 20px;
 }
@@ -102,11 +103,57 @@ h3 {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 30px;
 }
 
 th, td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+/* Estilos responsivos para dispositivos más pequeños */
+@media (max-width: 768px) {
+  h2, h3 {
+    font-size: 1.5rem; /* Ajuste de tamaño de texto */
+  }
+
+  table {
+    font-size: 0.9rem; /* Reducir tamaño de la tabla */
+    margin-bottom: 15px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  td {
+    word-wrap: break-word; /* Asegura que las celdas con contenido largo se ajusten */
+  }
+}
+
+@media (max-width: 480px) {
+  h2, h3 {
+    font-size: 1.2rem; /* Ajuste para pantallas más pequeñas */
+  }
+
+  table {
+    font-size: 0.8rem; /* Reducir más el tamaño de la tabla */
+  }
+
+  th, td {
+    padding: 6px;
+  }
+
+  /* Ocultar algunos títulos de columna si es necesario */
+  th, td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100px;
+  }
 }
 </style>

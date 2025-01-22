@@ -5,7 +5,7 @@
     <h2>Gráficos X-Y</h2>
 
     <!-- Selección de ejes -->
-    <div>
+    <div class="chart-controls">
       <label for="x-axis">X-Axis:</label>
       <select v-model="selectedAxis.x" id="x-axis">
         <option v-for="option in axisOptions.x" :key="option.value" :value="option.value">
@@ -31,14 +31,14 @@
     </div>
 
     <!-- Gráfico principal -->
-    <div style="width: 100%; height: 400px;">
+    <div class="chart-container">
       <canvas id="chartCanvas"></canvas>
     </div>
 
     <h2>Gráfico secundario: Clase vs Cantidad</h2>
 
     <!-- Gráfico secundario -->
-    <div style="width: 100%; height: 400px;">
+    <div class="chart-container">
       <canvas id="secondaryChartCanvas"></canvas>
     </div>
   </div>
@@ -217,7 +217,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 h2 {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -231,8 +231,53 @@ button {
   margin-left: 10px;
 }
 
-canvas {
-  max-width: 100%;
+.chart-container {
+  width: 100%;
   height: auto;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* Estilos responsivos para dispositivos más pequeños */
+@media (max-width: 768px) {
+  h2, h3 {
+    font-size: 1.5rem;
+  }
+
+  .chart-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .chart-container {
+    max-width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  label {
+    font-size: 1rem;
+  }
 }
 </style>

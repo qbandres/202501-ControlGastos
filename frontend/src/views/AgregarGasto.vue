@@ -9,7 +9,7 @@
     <h2>Agregar Gasto</h2>
 
     <!-- Formulario para agregar un nuevo gasto -->
-    <form @submit.prevent="addExpense">
+    <form @submit.prevent="addExpense" class="expense-form">
       <div>
         <label for="usuario">Usuario:</label>
         <select v-model="newExpense.usuario" id="usuario" required>
@@ -155,5 +155,63 @@ export default {
 </script>
 
 <style>
-/* Aquí puedes agregar tu CSS personalizado */
+/* Diseño responsivo para el formulario */
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.expense-form label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.expense-form select,
+.expense-form input,
+.expense-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.expense-form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.expense-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 600px) {
+  .expense-form {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .expense-form label,
+  .expense-form select,
+  .expense-form input,
+  .expense-form textarea {
+    font-size: 1rem;
+  }
+
+  .expense-form button {
+    font-size: 1rem;
+  }
+}
 </style>

@@ -1,18 +1,23 @@
 <template>
-  <div class="login">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <div>
-        <label for="username">Username:</label>
-        <input v-model="username" id="username" type="text" required />
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input v-model="password" id="password" type="password" required />
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+  <div class="login-container">
+    <div class="login-form">
+      <h1>Login</h1>
+      <form @submit.prevent="handleLogin">
+        <div>
+          <label for="username">Username:</label>
+          <select v-model="username" id="username" required class="input-field">
+            <option value="Andres">Andres</option>
+            <option value="Yovana">Yovana</option>
+          </select>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input v-model="password" id="password" type="password" required class="input-field" />
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    </div>
   </div>
 </template>
 
@@ -23,7 +28,7 @@ import { useUserStore } from "@/stores/userStore"; // Importa la tienda del usua
 export default {
   data() {
     return {
-      username: "",
+      username: "Yovana",  // Valor predeterminado
       password: "",
       errorMessage: "",
     };
@@ -69,10 +74,89 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+/* Diseño minimalista centrado con fondo blanco humo */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5; /* Fondo blanco humo */
+}
+
+.login-form {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.input-field {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; /* Asegura que ambos campos tengan el mismo ancho */
+}
+
+.login-btn {
+  background-color: #007bff;  /* Azul */
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;  /* Azul más oscuro al pasar el mouse */
+}
+
+.login-btn:active {
+  transform: scale(0.98);  /* Efecto de clic */
+}
+
 .error {
   color: red;
   font-weight: bold;
   margin-top: 10px;
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .login-form {
+    width: 90%;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  input,
+  select,
+  .login-btn {
+    font-size: 1rem;
+  }
 }
 </style>

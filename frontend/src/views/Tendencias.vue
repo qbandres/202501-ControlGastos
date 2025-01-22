@@ -7,13 +7,13 @@
     <div>
       <!-- Gráfico de tendencia diaria -->
       <h3>Tendencia Diaria</h3>
-      <div id="tendenciaDiaria" style="width: 100%; height: 400px;">
+      <div id="tendenciaDiaria" class="chart-container">
         <canvas id="dailyTrendChart"></canvas>
       </div>
 
       <!-- Gráfico de tendencia mensual -->
       <h3>Tendencia Mensual</h3>
-      <div id="tendenciaMensual" style="width: 100%; height: 400px;">
+      <div id="tendenciaMensual" class="chart-container">
         <canvas id="monthlyTrendChart"></canvas>
       </div>
     </div>
@@ -119,8 +119,33 @@ h3 {
   margin-top: 30px;
 }
 
-canvas {
+.chart-container {
+  width: 100%;
   max-width: 100%;
-  height: auto;
+  height: 400px;
+  margin-bottom: 30px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  .chart-container {
+    height: 300px; /* Ajuste para pantallas pequeñas */
+  }
+
+  canvas {
+    height: 300px !important; /* Ajuste para pantallas pequeñas */
+  }
 }
 </style>
