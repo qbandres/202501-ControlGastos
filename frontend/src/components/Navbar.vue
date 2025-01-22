@@ -4,6 +4,11 @@
       <li><router-link to="/dashboard">Inicio</router-link></li>
       <li><router-link to="/modificar">Modificar</router-link></li>
       <li><router-link to="/graficos">Gráficos</router-link></li>
+      <li><router-link to="/tendencias">Tendencias</router-link></li>
+      
+      <!-- Enlace a la nueva vista de "Agregar Gasto" -->
+      <li><router-link to="/agregar-gasto">Agregar Gasto</router-link></li>
+      
       <li><a href="#" @click="logout">Cerrar sesión</a></li>
     </ul>
   </nav>

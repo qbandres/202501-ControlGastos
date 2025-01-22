@@ -8,7 +8,9 @@ import { useUserStore } from "@/stores/userStore";
 import Login from "@/views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Modificar from "@/views/Modificar.vue";
-import Graphics from "@/views/Graphics.vue"; // Importa la nueva vista de gráficos
+import Graphics from "@/views/Graphics.vue";
+import Tendencias from "@/views/Tendencias.vue";
+import AgregarGasto from "@/views/AgregarGasto.vue"; // Nueva vista para agregar gasto
 
 // Función para verificar si el usuario está autenticado
 const requireAuth = (to, from, next) => {
@@ -40,6 +42,18 @@ const routes = [
     path: "/graficos", // Ruta para Gráficos
     name: "Graficos",
     component: Graphics, // Componente de gráficos
+    beforeEnter: requireAuth, // Aplica la función de autenticación
+  },
+  {
+    path: "/tendencias", // Ruta para Tendencias
+    name: "Tendencias",
+    component: Tendencias, // Componente de tendencias
+    beforeEnter: requireAuth, // Aplica la función de autenticación
+  },
+  {
+    path: "/agregar-gasto", // Nueva ruta para Agregar Gasto
+    name: "AgregarGasto", 
+    component: AgregarGasto, // Componente de agregar gasto
     beforeEnter: requireAuth, // Aplica la función de autenticación
   },
 ];

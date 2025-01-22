@@ -110,7 +110,8 @@ export default {
   methods: {
     async fetchGastos() {
       try {
-        const response = await axios.get("http://localhost:8000/tabla-gastos");
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
+        const response = await axios.get(`${backendUrl}/tabla-gastos`);
         this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
 
         // Inicializa el estado de observaciones para todas las filas
@@ -144,8 +145,9 @@ export default {
       };
 
       try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
         const response = await axios.post(
-          "http://localhost:8000/tabla-gastos",
+          `${backendUrl}/tabla-gastos`,
           cleanedFilters
         );
         this.gastos = response.data.data; // Actualiza la tabla con los resultados filtrados

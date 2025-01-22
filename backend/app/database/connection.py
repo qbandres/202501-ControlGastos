@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base  # Importa declarative_base para los modelos
-from app.config import settings
+from sqlalchemy.ext.declarative import declarative_base
+from app.config import settings  # Asegúrate de importar correctamente la configuración
 
-# URL de la base de datos
+# URL de la base de datos utilizando las variables de entorno cargadas desde `.env`
 DATABASE_URL = (
     f"postgresql+psycopg://{settings.db_user}:{settings.db_password}"
     f"@{settings.db_host}:{settings.db_port}/{settings.db_name}"

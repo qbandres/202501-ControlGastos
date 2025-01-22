@@ -169,7 +169,10 @@ export default {
   methods: {
     async fetchGastos() {
       try {
-        const response = await axios.get("http://localhost:8000/tabla-gastos");
+        // Usamos la variable de entorno para obtener la URL del backend
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+        const response = await axios.get(`${backendUrl}/tabla-gastos`);
         this.gastos = response.data.data;
       } catch (error) {
         console.error("Error al cargar los gastos:", error);
@@ -177,7 +180,9 @@ export default {
     },
     async applyFilters() {
       try {
-        const response = await axios.post("http://localhost:8000/tabla-gastos", this.filters);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+        const response = await axios.post(`${backendUrl}/tabla-gastos`, this.filters);
         this.gastos = response.data.data;
       } catch (error) {
         console.error("Error al aplicar filtros:", error);
@@ -192,7 +197,9 @@ export default {
     },
     async confirmEdit() {
       try {
-        await axios.put(`http://localhost:8000/modificar/${this.selectedGasto.id}`, this.selectedGasto);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+        await axios.put(`${backendUrl}/modificar/${this.selectedGasto.id}`, this.selectedGasto);
         alert("Gasto modificado exitosamente");
         this.selectedGasto = null;
         this.fetchGastos(); // Actualiza la tabla
@@ -206,7 +213,9 @@ export default {
     async confirmDelete(id) {
       if (confirm("¿Está seguro de que desea eliminar este gasto?")) {
         try {
-          await axios.delete(`http://localhost:8000/modificar/${id}`);
+          const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+          await axios.delete(`${backendUrl}/modificar/${id}`);
           alert("Gasto eliminado exitosamente");
           this.fetchGastos();
         } catch (error) {

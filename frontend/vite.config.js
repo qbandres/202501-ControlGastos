@@ -10,4 +10,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  define: {
+    // Asegúrate de que la variable de entorno esté accesible en el código de frontend
+    'process.env': {
+      VITE_BACKEND_URL: process.env.VITE_BACKEND_URL || 'http://localhost:8000', // Valor por defecto para desarrollo local
+    },
+  },
+  build: {
+    sourcemap: false, // Deshabilitar mapas de fuentes en producción
+  }
 })

@@ -33,8 +33,11 @@ export default {
       console.log("Attempting login with username:", this.username);
 
       try {
+        // Obtiene la URL del backend desde la variable de entorno
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
         // Llama al backend con las credenciales
-        const response = await axios.post("http://localhost:8000/login", {
+        const response = await axios.post(`${backendUrl}/login`, {
           username: this.username,
           password: this.password,
         });

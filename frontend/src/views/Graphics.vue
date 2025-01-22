@@ -81,8 +81,11 @@ export default {
   methods: {
     async generateChart() {
       try {
+        // Obtener la URL del backend desde las variables de entorno
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        
         // Obtener datos para el gráfico principal
-        const response = await axios.post("http://localhost:8000/graficos/x-y", {
+        const response = await axios.post(`${backendUrl}/graficos/x-y`, {
           x_axis: this.selectedAxis.x,
           y_axis: this.selectedAxis.y,
           filters: this.filters,
@@ -148,8 +151,11 @@ export default {
     },
     async generateSecondaryChart() {
       try {
+        // Obtener la URL del backend desde las variables de entorno
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
         // Obtener datos para el gráfico secundario
-        const response = await axios.post("http://localhost:8000/graficos/x-y", {
+        const response = await axios.post(`${backendUrl}/graficos/x-y`, {
           x_axis: "clase", // Eje X fijo en "clase"
           y_axis: this.selectedAxis.y,
           filters: this.filters,
