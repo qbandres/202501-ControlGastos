@@ -30,9 +30,16 @@
       <button @click="generateChart">Generar Gráfico</button>
     </div>
 
-    <!-- Contenedor del gráfico -->
+    <!-- Gráfico principal -->
     <div style="width: 100%; height: 400px;">
       <canvas id="chartCanvas"></canvas>
+    </div>
+
+    <h2>Gráfico secundario: Clase vs Cantidad</h2>
+
+    <!-- Gráfico secundario -->
+    <div style="width: 100%; height: 400px;">
+      <canvas id="secondaryChartCanvas"></canvas>
     </div>
   </div>
 </template>
@@ -42,13 +49,14 @@ import axios from "axios";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 import Chart from "chart.js/auto";
-import "chartjs-adapter-date-fns"; // Importa el adaptador de fechas
+import "chartjs-adapter-date-fns";
 
 export default {
   components: { Titulo, Navbar },
   data() {
     return {
-      chart: null, // Instancia del gráfico
+      chart: null, // Instancia del gráfico principal
+      secondaryChart: null, // Instancia del gráfico secundario
       axisOptions: {
         x: [
           { value: "fecha", label: "Fecha" },
@@ -64,8 +72,8 @@ export default {
       },
       filters: {
         fecha: {
-          start: "", // Rango de fecha inicial
-          end: "", // Rango de fecha final
+          start: "2024-11-01", // Rango de fecha inicial predefinido
+          end: "2025-04-30",   // Rango de fecha final predefinido
         },
       },
     };
@@ -73,6 +81,7 @@ export default {
   methods: {
     async generateChart() {
       try {
+        // Obtener datos para el gráfico principal
         const response = await axios.post("http://localhost:8000/graficos/x-y", {
           x_axis: this.selectedAxis.x,
           y_axis: this.selectedAxis.y,
@@ -81,23 +90,23 @@ export default {
 
         const { data } = response.data;
 
-        console.log("Datos recibidos del backend:", data);
+        console.log("Datos del gráfico principal:", data);
 
-        // Si ya existe un gráfico, destrúyelo
+        // Si ya existe un gráfico principal, destrúyelo
         if (this.chart) {
           this.chart.destroy();
         }
 
-        // Crear un nuevo gráfico con los datos recibidos
+        // Crear el gráfico principal
         const ctx = document.getElementById("chartCanvas").getContext("2d");
         this.chart = new Chart(ctx, {
-          type: "bar", // Cambiado a gráfico de barras
+          type: "bar",
           data: {
-            labels: data.map((point) => point.x), // Usa los valores de X como etiquetas
+            labels: data.map((point) => point.x),
             datasets: [
               {
                 label: `Gráfico de ${this.selectedAxis.y} vs ${this.selectedAxis.x}`,
-                data: data.map((point) => point.y), // Usa los valores de Y como datos
+                data: data.map((point) => point.y),
                 backgroundColor: "rgba(75, 192, 192, 0.6)",
               },
             ],
@@ -121,7 +130,67 @@ export default {
                 },
               },
               y: {
-                beginAtZero: true, // Asegura que el eje Y comience en 0
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: this.selectedAxis.y,
+                },
+              },
+            },
+          },
+        });
+
+        // Generar el gráfico secundario con "clase" como X
+        await this.generateSecondaryChart();
+      } catch (error) {
+        console.error("Error al generar el gráfico:", error);
+      }
+    },
+    async generateSecondaryChart() {
+      try {
+        // Obtener datos para el gráfico secundario
+        const response = await axios.post("http://localhost:8000/graficos/x-y", {
+          x_axis: "clase", // Eje X fijo en "clase"
+          y_axis: this.selectedAxis.y,
+          filters: this.filters,
+        });
+
+        const { data } = response.data;
+
+        console.log("Datos del gráfico secundario:", data);
+
+        // Si ya existe un gráfico secundario, destrúyelo
+        if (this.secondaryChart) {
+          this.secondaryChart.destroy();
+        }
+
+        // Crear el gráfico secundario
+        const ctx = document.getElementById("secondaryChartCanvas").getContext("2d");
+        this.secondaryChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: data.map((point) => point.x),
+            datasets: [
+              {
+                label: `Gráfico de ${this.selectedAxis.y} vs Clase`,
+                data: data.map((point) => point.y),
+                backgroundColor: "rgba(153, 102, 255, 0.6)",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                type: "category",
+                title: {
+                  display: true,
+                  text: "Clase",
+                },
+              },
+              y: {
+                beginAtZero: true,
                 title: {
                   display: true,
                   text: this.selectedAxis.y,
@@ -131,9 +200,13 @@ export default {
           },
         });
       } catch (error) {
-        console.error("Error al generar el gráfico:", error);
+        console.error("Error al generar el gráfico secundario:", error);
       }
     },
+  },
+  async mounted() {
+    // Generar los gráficos al cargar la página
+    await this.generateChart();
   },
 };
 </script>

@@ -4,11 +4,19 @@
 
     <!-- Filtros -->
     <div class="filtros">
-      <label>Usuario:</label>
-      <input v-model="filters.usuario" type="text" placeholder="Filtrar por usuario" />
+      <label for="usuario">Usuario:</label>
+      <select v-model="filters.usuario" id="usuario">
+        <option v-for="option in filterOptions.usuario" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
+      </select>
 
-      <label>Clase:</label>
-      <input v-model="filters.clase" type="text" placeholder="Filtrar por clase" />
+      <label for="clase">Clase:</label>
+      <select v-model="filters.clase" id="clase">
+        <option v-for="option in filterOptions.clase" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
+      </select>
 
       <label>Desde:</label>
       <input v-model="filters.rango_fecha_inicio" type="date" />
@@ -18,6 +26,9 @@
 
       <label>Cantidad Mínima:</label>
       <input v-model="filters.rango_cantidad_min" type="number" placeholder="Mínima" />
+
+      <label>Cantidad Máxima:</label>
+      <input v-model="filters.rango_cantidad_max" type="number" placeholder="Máxima" />
 
       <button @click="applyFilters">Aplicar Filtros</button>
       <button @click="resetFilters">Restablecer</button>
@@ -76,6 +87,22 @@ export default {
         rango_fecha_fin: "",
         rango_cantidad_min: null,
         rango_cantidad_max: null,
+      },
+      filterOptions: {
+        usuario: [
+          { value: "", label: "Todos" },
+          { value: "YP", label: "Yovana" },
+          { value: "AQ", label: "Andrés" },
+        ],
+        clase: [
+          { value: "", label: "Todos" },
+          { value: "Educación", label: "Educación" },
+          { value: "Salud", label: "Salud" },
+          { value: "Vestimenta", label: "Vestimenta" },
+          { value: "Alimentos", label: "Alimentos" },
+          { value: "Recreación", label: "Recreación" },
+          { value: "Tecnología", label: "Tecnología" },
+        ],
       },
       showObservacion: {}, // Estado para controlar qué observaciones están visibles
     };
