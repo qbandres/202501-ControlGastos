@@ -12,7 +12,7 @@ app = FastAPI()
 # Configurar CORS para producción y desarrollo
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://your-frontend.onrender.com"],  # Cambia según la URL del frontend
+    allow_origins=["http://localhost:5173", "https://two02501-controlgastos.onrender.com"],  # Cambia según la URL del frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
