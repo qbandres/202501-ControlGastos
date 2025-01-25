@@ -59,7 +59,7 @@
           <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.tipo }}</td>
           <td>{{ gasto.locacion }}</td>
-          <td>{{ new Date(gasto.fecha).toLocaleDateString() }}</td>
+          <td>{{ gasto.fecha.split("T")[0] }}</td>
           <td>
             <button @click="toggleObservacion(gasto.id)">
               {{ showObservacion[gasto.id] ? "Ocultar" : "Mostrar" }}
@@ -108,9 +108,25 @@ export default {
     };
   },
   methods: {
+    formatFecha(fecha) {
+      // Crear un objeto Date desde la fecha proporcionada
+      const date = new Date(fecha);
+
+      // Verificar si la fecha es válida
+      if (isNaN(date)) {
+        return "Fecha inválida"; // Si no es válida, devuelve un texto por defecto
+      }
+
+      // Formatear la fecha en el formato deseado (DD/MM/YYYY)
+      return date.toLocaleDateString("es-PE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    },
     async fetchGastos() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
+        const backendUrl = import.meta.env.VITE_BACKEND_URL; // Obtener la URL del backend desde el archivo .env
         const response = await axios.get(`${backendUrl}/tabla-gastos`);
         this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
 
@@ -145,7 +161,7 @@ export default {
       };
 
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
+        const backendUrl = import.meta.env.VITE_BACKEND_URL; // Obtener la URL del backend desde el archivo .env
         const response = await axios.post(
           `${backendUrl}/tabla-gastos`,
           cleanedFilters
