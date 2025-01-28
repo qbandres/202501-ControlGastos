@@ -1,34 +1,39 @@
 <template>
-  <div class="login-container">
-    <div class="login-form">
-      <h1>Login</h1>
-      <form @submit.prevent="handleLogin">
-        <div>
-          <label for="username">Username:</label>
-          <select v-model="username" id="username" required class="input-field">
+  <div class="container">
+    <h1>Login</h1>
+    <form @submit.prevent="handleLogin" class="content__form">
+      <div class="content__inputs">
+        <label>
+          <select v-model="username" required>
             <option value="Andres">Andres</option>
             <option value="Yovana">Yovana</option>
           </select>
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input v-model="password" id="password" type="password" required class="input-field" />
-        </div>
-        <button type="submit" class="login-btn">Login</button>
-      </form>
+          <span>Username</span>
+        </label>
+        <label>
+          <input
+            v-model="password"
+            type="password"
+            required
+            placeholder=" "
+          />
+          <span>Password</span>
+        </label>
+      </div>
+      <button type="submit">Login</button>
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { useUserStore } from "@/stores/userStore"; // Importa la tienda del usuario
+import { useUserStore } from "@/stores/userStore";
 
 export default {
   data() {
     return {
-      username: "Yovana",  // Valor predeterminado
+      username: "",
       password: "",
       errorMessage: "",
     };
@@ -38,34 +43,20 @@ export default {
       console.log("Attempting login with username:", this.username);
 
       try {
-        // Obtiene la URL del backend desde la variable de entorno
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-        // Llama al backend con las credenciales
         const response = await axios.post(`${backendUrl}/login`, {
           username: this.username,
           password: this.password,
         });
 
-        console.log("Response from backend:", response.data);
-
-        // Verifica si la respuesta contiene un username
         if (response.data.username) {
-          console.log("Login successful, redirecting to Dashboard...");
-
-          // Guarda el nombre de usuario en el estado global
           const userStore = useUserStore();
           userStore.setUsername(response.data.username);
-
-          // Redirige al Dashboard
           this.$router.push("/dashboard");
         } else {
-          console.warn("Login failed, server message:", response.data.message);
           this.errorMessage = response.data.message || "Login failed";
         }
       } catch (error) {
-        // Captura errores y muestra mensajes
-        console.error("Error during login:", error);
         this.errorMessage =
           error.response?.data?.detail || "Login failed. Please try again.";
       }
@@ -75,88 +66,113 @@ export default {
 </script>
 
 <style scoped>
-/* Diseño minimalista centrado con fondo blanco humo */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  background-color: #f5f5f5; /* Fondo blanco humo */
-}
-
-.login-form {
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+/* Adapted styles */
+.container {
+  border-radius: 1px;
+  padding: 50px 40px 20px 40px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  color: #737373;
+  border: 1px solid rgb(219, 219, 219);
   text-align: center;
+  background: white;
+  max-width: 400px;
+  margin: 50px auto;
 }
 
 h1 {
   margin-bottom: 20px;
+  font-size: 24px;
   color: #333;
 }
 
-form {
+.content__form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  row-gap: 14px;
+}
+
+.content__inputs {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
 }
 
 label {
-  text-align: left;
-  margin-bottom: 5px;
+  border: 1px solid rgb(219, 219, 219);
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-width: 268px;
+  height: 38px;
+  background: rgb(250, 250, 250);
+  border-radius: 3px;
 }
 
-.input-field {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%; /* Asegura que ambos campos tengan el mismo ancho */
+select,
+input {
+  width: 100%;
+  background: inherit;
+  border: 0;
+  outline: none;
+  padding: 9px 8px 7px 8px;
+  font-size: 16px;
+  vertical-align: middle;
 }
 
-.login-btn {
-  background-color: #007bff;  /* Azul */
+select:required:invalid {
+  color: gray;
+}
+
+option[value=""][disabled] {
+  display: none;
+}
+
+span {
+  position: absolute;
+  text-overflow: ellipsis;
+  transform-origin: left;
+  font-size: 12px;
+  left: 8px;
+  pointer-events: none;
+  transition: transform ease-out 0.1s;
+}
+
+input:valid + span,
+select:valid + span {
+  transform: scale(calc(10 / 12)) translateY(-10px);
+}
+
+input:valid,
+select:valid {
+  padding: 14px 0 2px 8px;
+  font-size: 12px;
+}
+
+button {
+  background: rgb(0, 149, 246);
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 7px 16px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.login-btn:hover {
-  background-color: #0056b3;  /* Azul más oscuro al pasar el mouse */
+button:hover {
+  background: rgb(24, 119, 242);
 }
 
-.login-btn:active {
-  transform: scale(0.98);  /* Efecto de clic */
+button:active:not(:hover) {
+  background: rgb(0, 149, 246);
+  opacity: 0.7;
 }
 
 .error {
   color: red;
   font-weight: bold;
   margin-top: 10px;
-}
-
-/* Responsividad */
-@media (max-width: 600px) {
-  .login-form {
-    width: 90%;
-    padding: 20px;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  input,
-  select,
-  .login-btn {
-    font-size: 1rem;
-  }
 }
 </style>
