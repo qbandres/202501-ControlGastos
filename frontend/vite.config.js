@@ -11,12 +11,16 @@ export default defineConfig({
     },
   },
   define: {
-    // Asegúrate de que la variable de entorno esté accesible en el código de frontend
+    // Esto inyecta la variable en el bundle, tanto en desarrollo como en producción.
     'process.env': {
-      VITE_BACKEND_URL: process.env.VITE_BACKEND_URL || 'http://localhost:8000', // Valor por defecto para desarrollo local
+      VITE_BACKEND_URL: process.env.VITE_BACKEND_URL || 'http://localhost:8000',
     },
   },
   build: {
     sourcemap: false, // Deshabilitar mapas de fuentes en producción
-  }
+  },
+  server: {
+    host: '0.0.0.0', // Para que sea accesible en la red
+    port: 5173,
+  },
 })
