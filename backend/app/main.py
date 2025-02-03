@@ -6,7 +6,6 @@ app = FastAPI()
 
 # Valor por defecto para desarrollo que incluye localhost.
 default_origins = "http://localhost:5173"
-# Si se define la variable de entorno ALLOWED_ORIGINS, se utilizará ese valor; 
 # de lo contrario, se usará el valor por defecto.
 allowed_origins_str = os.getenv("ALLOWED_ORIGINS", default_origins)
 allowed_origins = allowed_origins_str.split(",")
