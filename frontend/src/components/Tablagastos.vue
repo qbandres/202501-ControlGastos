@@ -1,40 +1,48 @@
 <template>
-  <div>
+  <div class="tabla-gastos-container">
     <h2>Gastos</h2>
 
     <!-- Filtros -->
-    <div class="filtros">
-      <label for="usuario">Usuario:</label>
-      <select v-model="filters.usuario" id="usuario">
-        <option v-for="option in filterOptions.usuario" :key="option.value" :value="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-
-      <label for="clase">Clase:</label>
-      <select v-model="filters.clase" id="clase">
-        <option v-for="option in filterOptions.clase" :key="option.value" :value="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-
-      <label>Desde:</label>
-      <input v-model="filters.rango_fecha_inicio" type="date" />
-
-      <label>Hasta:</label>
-      <input v-model="filters.rango_fecha_fin" type="date" />
-
-      <label>Cantidad Mínima:</label>
-      <input v-model="filters.rango_cantidad_min" type="number" placeholder="Mínima" />
-
-      <label>Cantidad Máxima:</label>
-      <input v-model="filters.rango_cantidad_max" type="number" placeholder="Máxima" />
-
-      <button @click="applyFilters">Aplicar Filtros</button>
-      <button @click="resetFilters">Restablecer</button>
+    <div class="filtros-container">
+      <label>
+        Usuario:
+        <select v-model="filtros.usuario">
+          <option value="">Todos</option>
+          <option v-for="usuario in usuarios" :key="usuario" :value="usuario">
+            {{ usuario }}
+          </option>
+        </select>
+      </label>
+      <label>
+        Clase:
+        <select v-model="filtros.clase">
+          <option value="">Todos</option>
+          <option v-for="clase in clases" :key="clase" :value="clase">
+            {{ clase }}
+          </option>
+        </select>
+      </label>
+      <label>
+        Desde:
+        <input type="date" v-model="filtros.rango_fecha_inicio" />
+      </label>
+      <label>
+        Hasta:
+        <input type="date" v-model="filtros.rango_fecha_fin" />
+      </label>
+      <label>
+        Cantidad Mínima:
+        <input type="number" v-model="filtros.rango_cantidad_min" />
+      </label>
+      <label>
+        Cantidad Máxima:
+        <input type="number" v-model="filtros.rango_cantidad_max" />
+      </label>
+      <button @click="aplicarFiltros">Aplicar Filtros</button>
+      <button @click="restablecerFiltros">Restablecer</button>
     </div>
 
-    <!-- Tabla de Resultados -->
+    <!-- Tabla de gastos -->
     <table>
       <thead>
         <tr>
@@ -59,13 +67,8 @@
           <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.tipo }}</td>
           <td>{{ gasto.locacion }}</td>
-          <td>{{ gasto.fecha.split("T")[0] }}</td>
-          <td>
-            <button @click="toggleObservacion(gasto.id)">
-              {{ showObservacion[gasto.id] ? "Ocultar" : "Mostrar" }}
-            </button>
-            <div v-if="showObservacion[gasto.id]">{{ gasto.observaciones }}</div>
-          </td>
+          <td>{{ gasto.fecha.split("T")[0] }}</td> <!-- Corregido formato fecha -->
+          <td>{{ gasto.observaciones }}</td>
           <td>{{ gasto.metodo }}</td>
         </tr>
       </tbody>
@@ -79,8 +82,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      gastos: [], // Lista de gastos recibida del backend
-      filters: {
+      gastos: [], // Datos de la tabla
+      filtros: {
         usuario: "",
         clase: "",
         rango_fecha_inicio: "",
@@ -88,97 +91,58 @@ export default {
         rango_cantidad_min: null,
         rango_cantidad_max: null,
       },
-      filterOptions: {
-        usuario: [
-          { value: "", label: "Todos" },
-          { value: "YP", label: "Yovana" },
-          { value: "AQ", label: "Andrés" },
-        ],
-        clase: [
-          { value: "", label: "Todos" },
-          { value: "Educación", label: "Educación" },
-          { value: "Salud", label: "Salud" },
-          { value: "Vestimenta", label: "Vestimenta" },
-          { value: "Alimentos", label: "Alimentos" },
-          { value: "Recreación", label: "Recreación" },
-          { value: "Tecnología", label: "Tecnología" },
-        ],
-      },
-      showObservacion: {}, // Estado para controlar qué observaciones están visibles
+      usuarios: [], // Lista de usuarios para el filtro
+      clases: [], // Lista de clases para el filtro
     };
   },
   methods: {
-    formatFecha(fecha) {
-      // Crear un objeto Date desde la fecha proporcionada
-      const date = new Date(fecha);
-
-      // Verificar si la fecha es válida
-      if (isNaN(date)) {
-        return "Fecha inválida"; // Si no es válida, devuelve un texto por defecto
-      }
-
-      // Formatear la fecha en el formato deseado (DD/MM/YYYY)
-      return date.toLocaleDateString("es-PE", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-    },
-    async fetchGastos() {
+    async cargarGastos() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL; // Obtener la URL del backend desde el archivo .env
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.get(`${backendUrl}/tabla-gastos`);
-        this.gastos = response.data.data; // Carga los últimos 20 gastos por defecto
+        this.gastos = response.data.data;
 
-        // Inicializa el estado de observaciones para todas las filas
-        this.showObservacion = this.gastos.reduce((acc, gasto) => {
-          acc[gasto.id] = false; // Por defecto, todas las observaciones están ocultas
-          return acc;
-        }, {});
+        // Obtener listas únicas de usuarios y clases en una sola consulta
+        const uniqueUsuarios = new Set();
+        const uniqueClases = new Set();
+        this.gastos.forEach((gasto) => {
+          if (gasto.usuario) uniqueUsuarios.add(gasto.usuario);
+          if (gasto.clase) uniqueClases.add(gasto.clase);
+        });
+        this.usuarios = Array.from(uniqueUsuarios);
+        this.clases = Array.from(uniqueClases);
       } catch (error) {
         console.error("Error al cargar los gastos:", error);
       }
     },
-    toggleObservacion(id) {
-      // Alterna la visibilidad de la observación para la fila específica
-      this.showObservacion[id] = !this.showObservacion[id];
-    },
-    async applyFilters() {
-      // Procesa y limpia los datos antes de enviarlos
-      const cleanedFilters = {
-        usuario: this.filters.usuario || null, // Si está vacío, lo envía como null
-        clase: this.filters.clase || null,
-        rango_fecha_inicio: this.filters.rango_fecha_inicio || null,
-        rango_fecha_fin: this.filters.rango_fecha_fin || null,
+    async aplicarFiltros() {
+      const payload = {
+        usuario: this.filtros.usuario || null,
+        clase: this.filtros.clase || null,
+        rango_fecha_inicio: this.filtros.rango_fecha_inicio || null,
+        rango_fecha_fin: this.filtros.rango_fecha_fin || null,
         rango_cantidad_min:
-          this.filters.rango_cantidad_min !== null
-            ? Number(this.filters.rango_cantidad_min)
+          this.filtros.rango_cantidad_min !== null
+            ? Number(this.filtros.rango_cantidad_min)
             : null,
         rango_cantidad_max:
-          this.filters.rango_cantidad_max !== null
-            ? Number(this.filters.rango_cantidad_max)
+          this.filtros.rango_cantidad_max !== null
+            ? Number(this.filtros.rango_cantidad_max)
             : null,
       };
 
-      try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL; // Obtener la URL del backend desde el archivo .env
-        const response = await axios.post(
-          `${backendUrl}/tabla-gastos`,
-          cleanedFilters
-        );
-        this.gastos = response.data.data; // Actualiza la tabla con los resultados filtrados
+      console.log("Payload enviado al backend:", payload);
 
-        // Actualiza el estado de observaciones después de aplicar los filtros
-        this.showObservacion = this.gastos.reduce((acc, gasto) => {
-          acc[gasto.id] = false;
-          return acc;
-        }, {});
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/tabla-gastos`, payload);
+        this.gastos = response.data.data;
       } catch (error) {
         console.error("Error al aplicar filtros:", error);
       }
     },
-    resetFilters() {
-      this.filters = {
+    restablecerFiltros() {
+      this.filtros = {
         usuario: "",
         clase: "",
         rango_fecha_inicio: "",
@@ -186,11 +150,61 @@ export default {
         rango_cantidad_min: null,
         rango_cantidad_max: null,
       };
-      this.fetchGastos(); // Recarga los últimos 20 gastos
+      this.cargarGastos();
     },
   },
-  async created() {
-    await this.fetchGastos(); // Carga inicial de los últimos 20 gastos
+  async mounted() {
+    await this.cargarGastos();
   },
 };
 </script>
+
+<style scoped>
+.tabla-gastos-container {
+  width: 100%;
+  margin: auto;
+}
+
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtros-container label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+button {
+  padding: 8px 15px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+</style>

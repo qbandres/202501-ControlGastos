@@ -1,50 +1,72 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from app.database.connection import get_db
 from app.models.datagastos import ControlGastos
 from app.services.filters_data import apply_filters
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import date
 
 router = APIRouter()
 
-
-
-
-
+# 🟢 Modelo para recibir los filtros desde el frontend
 class FiltrosGastos(BaseModel):
-    usuario: Optional[str] = None
-    clase: Optional[str] = None
-    rango_fecha_inicio: Optional[date] = None  # Cambiado a tipo `date`
-    rango_fecha_fin: Optional[date] = None  # Cambiado a tipo `date`
-    clase_in: Optional[List[str]] = None
-    rango_cantidad_min: Optional[float] = None
-    rango_cantidad_max: Optional[float] = None
+    usuario: Optional[str] = Field(None, description="Usuario específico para filtrar")
+    clase: Optional[str] = Field(None, description="Clase específica para filtrar")
+    rango_fecha_inicio: Optional[date] = Field(None, description="Fecha mínima")
+    rango_fecha_fin: Optional[date] = Field(None, description="Fecha máxima")
+    rango_cantidad_min: Optional[float] = Field(None, description="Cantidad mínima")
+    rango_cantidad_max: Optional[float] = Field(None, description="Cantidad máxima")
+    clase_in: Optional[List[str]] = Field(None, description="Lista de clases para filtrar")
 
-
+# 🟢 Endpoint para obtener gastos filtrados
 @router.post("/tabla-gastos")
 def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
     """
-    Devuelve los registros filtrados de la tabla ControlGastos.
-    Si no se envían filtros, devuelve todos los registros.
+    Devuelve los registros filtrados de la tabla ControlGastos según los parámetros enviados.
     """
     try:
         # Base de la consulta
         query = db.query(ControlGastos)
 
-        # Convierte los filtros a un diccionario y aplica filtros dinámicos
-        filtros_dict = filters.dict(exclude_unset=True)
-        query = apply_filters(query, filtros_dict)
+        # Validar y aplicar filtros dinámicos
+        if filters.rango_fecha_inicio and filters.rango_fecha_fin:
+            if filters.rango_fecha_inicio > filters.rango_fecha_fin:
+                raise HTTPException(status_code=400, detail="La fecha inicial no puede ser mayor que la fecha final.")
+            query = query.filter(
+                and_(
+                    ControlGastos.fecha >= filters.rango_fecha_inicio,
+                    ControlGastos.fecha <= filters.rango_fecha_fin
+                )
+            )
 
+        if filters.rango_cantidad_min is not None and filters.rango_cantidad_max is not None:
+            if filters.rango_cantidad_min > filters.rango_cantidad_max:
+                raise HTTPException(status_code=400, detail="La cantidad mínima no puede ser mayor que la cantidad máxima.")
+            query = query.filter(
+                and_(
+                    ControlGastos.cantidad >= filters.rango_cantidad_min,
+                    ControlGastos.cantidad <= filters.rango_cantidad_max
+                )
+            )
 
-        # Ordenar por fecha descendente
-        query = query.order_by(ControlGastos.fecha.desc())
+        if filters.usuario:
+            query = query.filter(ControlGastos.usuario == filters.usuario)
+        if filters.clase:
+            query = query.filter(ControlGastos.clase == filters.clase)
+        if filters.clase_in:
+            query = query.filter(ControlGastos.clase.in_(filters.clase_in))
 
-        # Ejecuta la consulta
+        # Ordenar por fecha descendente y limitar resultados
+        query = query.order_by(ControlGastos.fecha.desc()).limit(100)  # Límite de 100 registros por solicitud
         results = query.all()
 
-        # Devuelve los resultados en formato JSON
+        # Verificar si hay resultados
+        if not results:
+            return {"status": "success", "message": "No se encontraron registros con los filtros aplicados.", "data": []}
+
+        # Formatear la respuesta
         return {
             "status": "success",
             "data": [
@@ -67,6 +89,7 @@ def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error al filtrar datos: {str(e)}")
 
 
+# 🟢 Endpoint para obtener los últimos 20 gastos
 @router.get("/tabla-gastos")
 def get_last_20_gastos(db: Session = Depends(get_db)):
     """
@@ -80,7 +103,11 @@ def get_last_20_gastos(db: Session = Depends(get_db)):
             .all()
         )
 
-        # Devuelve los resultados en formato JSON
+        # Verificar si hay resultados
+        if not gastos:
+            return {"status": "success", "message": "No hay datos disponibles.", "data": []}
+
+        # Formatear la respuesta
         return {
             "status": "success",
             "data": [
