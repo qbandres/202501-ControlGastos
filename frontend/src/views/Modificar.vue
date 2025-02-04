@@ -43,7 +43,7 @@
           <td>{{ gasto.asignacion }}</td>
           <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.tipo }}</td>
-          <td>{{ new Date(gasto.fecha).toLocaleDateString() }}</td>
+          <td>{{ gasto.fecha.split("T")[0] }}</td>
           <td>{{ gasto.observaciones }}</td>
           <td>
             <button @click="editGasto(gasto)">Modificar</button>

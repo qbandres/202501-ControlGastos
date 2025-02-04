@@ -11,6 +11,7 @@ def get_filtered_gastos(filters: dict, db: Session = Depends(get_db)):
     query = db.query(ControlGastos)
     query = apply_filters(query, filters)
     gastos = query.limit(20).all()
+    query = query.order_by(ControlGastos.fecha.desc())
     return {"status": "success", "data": [g.to_dict() for g in gastos]}
 
 @router.put("/{id}")

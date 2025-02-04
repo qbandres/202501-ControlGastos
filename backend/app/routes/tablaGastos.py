@@ -37,6 +37,10 @@ def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
         filtros_dict = filters.dict(exclude_unset=True)
         query = apply_filters(query, filtros_dict)
 
+
+        # Ordenar por fecha descendente
+        query = query.order_by(ControlGastos.fecha.desc())
+
         # Ejecuta la consulta
         results = query.all()
 
@@ -71,7 +75,7 @@ def get_last_20_gastos(db: Session = Depends(get_db)):
     try:
         gastos = (
             db.query(ControlGastos)
-            .order_by(ControlGastos.f_ingreso.desc())
+            .order_by(ControlGastos.fecha.desc())
             .limit(20)
             .all()
         )
