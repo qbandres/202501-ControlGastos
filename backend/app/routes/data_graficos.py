@@ -4,7 +4,6 @@ from sqlalchemy import func
 from app.database.connection import get_db
 from app.models.datagastos import ControlGastos
 from datetime import timedelta,datetime
-import pandas as pd
 from sqlalchemy import func, desc  # Asegúrate de importar 'desc'
 from app.schemas.graficos_dinamicos import FiltrosGraficoFechaDia  # Importamos el esquema desde schemas
 
