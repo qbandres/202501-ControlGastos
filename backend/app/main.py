@@ -29,3 +29,7 @@ app.include_router(graficos.router, prefix="/graficos", tags=["Gráficos"])
 app.include_router(tendencias.router, prefix="/tendencias", tags=["Tendencias"])
 app.include_router(resumen_gastos_router, prefix="/resumen-gastos", tags=["Resumen Gastos"])
 app.include_router(agregar_gasto_router)
+
+@app.get("/")
+def read_root():
+    return {"message": "API de Control de Gastos funcionando correctamente 🚀"}
