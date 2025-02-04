@@ -1,18 +1,15 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
+
 
 app = FastAPI()
 
-# Valor por defecto para desarrollo que incluye localhost.
-default_origins = "http://localhost:5173"
-# Si no se define ALLOWED_ORIGINS en el entorno, se usa el valor por defecto.
-allowed_origins_str = os.getenv("ALLOWED_ORIGINS", default_origins)
-allowed_origins = allowed_origins_str.split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=settings.allowed_origins,  # Esto ya es una lista,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
