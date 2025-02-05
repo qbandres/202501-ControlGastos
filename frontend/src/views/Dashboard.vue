@@ -104,7 +104,8 @@ export default {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
-          order: "desc" // Las tablas deben mostrar los datos en orden descendente
+          order: "desc", // Las tablas deben mostrar los datos en orden descendente
+          n_ultimos_meses: 10 // Mostramos los últimos 6 meses
         });
         console.log("Datos recibidos para gastosPorMesTabla:", response.data.data);
         this.gastosPorMesTabla = response.data.data; 
@@ -118,7 +119,8 @@ export default {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
-          order: "asc" // Los gráficos deben mostrar los datos en orden ascendente
+          order: "asc", // Los gráficos deben mostrar los datos en orden ascendente
+          n_ultimos_meses: 10 // Mostramos los últimos 6 meses
         });
         console.log("Datos recibidos para gastosPorMesGrafico:", response.data.data);
         this.gastosPorMesGrafico = response.data.data; 
@@ -133,7 +135,7 @@ export default {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_dia`, {
           order: "desc", // Las tablas deben mostrar los datos en orden descendente
-          n_ultimos_dias: 7
+          n_ultimos_dias: 10
         });
         console.log("Datos recibidos para gastosUltimos7DiasTabla:", response.data.data);
         this.gastosUltimos7DiasTabla = response.data.data; 

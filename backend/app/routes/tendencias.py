@@ -1,103 +1,82 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 from app.database.connection import get_db
-from app.models.datagastos import ControlGastos
-from sklearn.linear_model import LinearRegression
-import numpy as np
+from app.schemas.data_graficos import FiltrosGraficoFechaDia, FiltrosGraficoFechaMes
 import pandas as pd
-from pydantic import BaseModel
-from typing import List
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from app.services.graficos_service import get_datos_fecha_dia, get_datos_fecha_mes
 
 router = APIRouter()
 
-# Modelos de respuesta
-class TendenciaDiaria(BaseModel):
-    fecha: str
-    cantidad: float
-
-class TendenciaMensual(BaseModel):
-    mes: str
-    cantidad: float
-
-@router.get("/diarias", response_model=List[TendenciaDiaria])
-def calcular_tendencia_diaria(db: Session = Depends(get_db)):
-    """
-    Calcula la tendencia diaria de los gastos utilizando regresión lineal.
-    """
+@router.post("/tendencias_diarias")
+def obtener_tendencias_diarias(filtros: FiltrosGraficoFechaDia, db: Session = Depends(get_db)):
     try:
-        # Consulta los datos
-        datos = db.query(ControlGastos.fecha, func.sum(ControlGastos.cantidad)).group_by(ControlGastos.fecha).order_by(ControlGastos.fecha).all()
-        if not datos:
-            raise HTTPException(status_code=404, detail="No hay datos disponibles para calcular la tendencia diaria")
-
-        # Crear DataFrame
-        df = pd.DataFrame(datos, columns=["fecha", "cantidad"])
-        df["fecha"] = pd.to_datetime(df["fecha"])  # Asegurar que las fechas sean de tipo datetime
-        df["fecha_num"] = (df["fecha"] - df["fecha"].min()).dt.days
-
-        # Regresión Lineal
-        X = df[["fecha_num"]].values
-        y = df["cantidad"].values
+        # 1. Obtener datos históricos
+        data = get_datos_fecha_dia(filtros, db)
+        df = pd.DataFrame(data)
+        
+        # 2. Calcular promedio móvil
+        df['promedio'] = df['value'].rolling(window=7, min_periods=1).mean()  # Ventana de 7 días
+        
+        # 3. Preparar para regresión lineal
+        df['fecha_num'] = np.arange(len(df))  # Convertir fechas a números
+        X = df[['fecha_num']].values
+        y = df['value'].values
         modelo = LinearRegression()
         modelo.fit(X, y)
 
-        # Predicción de los próximos 30 días
-        ultimo_dia = df["fecha_num"].max()
-        dias_futuros = np.arange(ultimo_dia + 1, ultimo_dia + 31).reshape(-1, 1)
+        # 4. Proyección futura
+        dias_futuros = np.arange(len(df), len(df) + 30).reshape(-1, 1)  # Próximos 30 días
         predicciones = modelo.predict(dias_futuros)
-
-        # Formatear las fechas futuras
-        fechas_futuras = [df["fecha"].min() + pd.Timedelta(days=int(dia)) for dia in dias_futuros.flatten()]
-        resultado = [{"fecha": fecha.strftime("%Y-%m-%d"), "cantidad": float(cantidad)} for fecha, cantidad in zip(fechas_futuras, predicciones)]
-
-        return resultado
+        fechas_futuras = pd.date_range(start=df['label'].iloc[-1], periods=31, freq='D')[1:]
+        
+        # 5. Combinar datos históricos con proyección
+        forecast = [{'label': fecha.strftime('%Y-%m-%d'), 'value': None, 'promedio': None, 'forecast': float(pred)}
+                    for fecha, pred in zip(fechas_futuras, predicciones)]
+        resultado = df[['label', 'value', 'promedio']].to_dict(orient='records') + forecast
+        
+        # Asegurar que todas las entradas tengan las 4 columnas
+        for item in resultado:
+            if 'forecast' not in item:
+                item['forecast'] = None
+        
+        return {"status": "success", "data": resultado}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al calcular tendencia diaria: {str(e)}")
 
-@router.get("/mensuales", response_model=List[TendenciaMensual])
-def calcular_tendencia_mensual(db: Session = Depends(get_db)):
-    """
-    Calcula la tendencia mensual de los gastos utilizando regresión lineal.
-    """
+@router.post("/tendencias_mensuales")
+def obtener_tendencias_mensuales(filtros: FiltrosGraficoFechaMes, db: Session = Depends(get_db)):
     try:
-        # Consulta agrupando por mes truncado
-        datos = (
-            db.query(
-                func.date_trunc("month", ControlGastos.fecha).label("mes"),  # Alias "mes"
-                func.sum(ControlGastos.cantidad).label("cantidad")
-            )
-            .group_by("mes")  # Agrupa por el alias "mes"
-            .order_by("mes")  # Ordena por el alias "mes"
-            .all()
-        )
-
-        if not datos:
-            raise HTTPException(status_code=404, detail="No hay datos disponibles para calcular la tendencia mensual")
-
-        # Crear DataFrame
-        df = pd.DataFrame(datos, columns=["mes", "cantidad"])
-        df["mes"] = pd.to_datetime(df["mes"])  # Asegurar que los meses sean de tipo datetime
-        df["mes_num"] = np.arange(len(df))  # Crear índices para los meses
-
-        # Regresión Lineal
-        X = df[["mes_num"]].values
-        y = df["cantidad"].values
+        # 1. Obtener datos históricos
+        data = get_datos_fecha_mes(filtros, db)
+        df = pd.DataFrame(data)
+        
+        # 2. Calcular promedio móvil
+        df['promedio'] = df['value'].rolling(window=3, min_periods=1).mean()  # Ventana de 3 meses
+        
+        # 3. Preparar para regresión lineal
+        df['mes_num'] = np.arange(len(df))  # Convertir meses a números
+        X = df[['mes_num']].values
+        y = df['value'].values
         modelo = LinearRegression()
         modelo.fit(X, y)
 
-        # Predicción de los próximos 12 meses
-        ultimo_mes = df["mes_num"].max()
-        meses_futuros = np.arange(ultimo_mes + 1, ultimo_mes + 13).reshape(-1, 1)
+        # 4. Proyección futura
+        meses_futuros = np.arange(len(df), len(df) + 6).reshape(-1, 1)  # Próximos 6 meses
         predicciones = modelo.predict(meses_futuros)
-
-        # Formatear los meses futuros
-        meses_futuros_str = [
-            (df["mes"].iloc[0] + pd.DateOffset(months=int(mes))).strftime("%Y-%m")
-            for mes in meses_futuros.flatten()
-        ]
-        resultado = [{"mes": mes, "cantidad": float(cantidad)} for mes, cantidad in zip(meses_futuros_str, predicciones)]
-
-        return resultado
+        meses_futuros_labels = pd.date_range(start=df['label'].iloc[-1], periods=7, freq='MS')[1:]
+        
+        # 5. Combinar datos históricos con proyección
+        forecast = [{'label': mes.strftime('%Y-%m'), 'value': None, 'promedio': None, 'forecast': float(pred)}
+                    for mes, pred in zip(meses_futuros_labels, predicciones)]
+        resultado = df[['label', 'value', 'promedio']].to_dict(orient='records') + forecast
+        
+        # Asegurar que todas las entradas tengan las 4 columnas
+        for item in resultado:
+            if 'forecast' not in item:
+                item['forecast'] = None
+        
+        return {"status": "success", "data": resultado}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al calcular tendencia mensual: {str(e)}")
