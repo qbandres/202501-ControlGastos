@@ -58,7 +58,7 @@
           <Graficos2D 
             type="bar" 
             :data="gastosPorMesGrafico" 
-            :config="{ title: 'Gastos por Mes', borderColor: 'blue' }" 
+            :config="{ title: 'Gastos por Mes', borderColor: 'blue',borderWidth: '0.1' }" 
           />
         </div>
 
@@ -67,7 +67,7 @@
           <Graficos2D 
             type="line" 
             :data="gastosUltimos7DiasGrafico" 
-            :config="{ title: 'Gastos Últimos 7 Días', borderColor: 'red' }" 
+            :config="{ title: 'Gastos Últimos 7 Días', borderColor: 'red',borderWidth: '1.5' }" 
           />
         </div>
       </div>
@@ -203,12 +203,14 @@ export default {
 
 .graph-container {
   width: 100%;
-  height: 300px;
-  overflow: hidden;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; /* Asegúrate de no ocultar nada */
   border: 1px solid #ccc;
   padding: 10px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
 /* 📌 Tabla General de Gastos */

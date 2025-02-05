@@ -50,11 +50,24 @@ export default defineComponent({
       },
       scales: {
         x: {
+          title: {
+            display: !!props.config.xAxisTitle, // Mostrar solo si está definido
+            text: props.config.xAxisTitle || "Eje X",
+          },
           grid: {
-            display: false,
+            display: props.config.showXAxisGrid || false, // Mostrar cuadrícula si está configurado
+          },
+          ticks: {
+            autoSkip: true, // Omitir etiquetas automáticamente si son muchas
+            maxRotation: props.config.maxRotation || 45, // Rotación máxima para etiquetas
+            minRotation: props.config.minRotation || 0, // Rotación mínima para etiquetas
           },
         },
         y: {
+          title: {
+            display: !!props.config.yAxisTitle, // Mostrar solo si está definido
+            text: props.config.yAxisTitle || "Eje Y",
+          },
           grid: {
             color: "rgba(200, 200, 200, 0.2)",
           },
