@@ -58,7 +58,7 @@
           <Graficos2D 
             type="bar" 
             :data="gastosPorMesGrafico" 
-            :config="{ title: 'Gastos por Mes', borderColor: 'blue',borderWidth: '0.1' }" 
+            :config="{borderColor: 'blue',borderWidth: '0.1' }" 
           />
         </div>
 
@@ -67,7 +67,7 @@
           <Graficos2D 
             type="line" 
             :data="gastosUltimos7DiasGrafico" 
-            :config="{ title: 'Gastos Últimos 7 Días', borderColor: 'red',borderWidth: '1.5' }" 
+            :config="{ borderColor: 'red',borderWidth: '1.5' }" 
           />
         </div>
       </div>
@@ -170,7 +170,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 /* 📌 Contenedor Principal del Dashboard */
 .dashboard-container {
   display: grid;

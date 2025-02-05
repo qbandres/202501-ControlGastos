@@ -44,7 +44,7 @@ export default defineComponent({
       maintainAspectRatio: false, // Permitir que se ajuste al contenedor
       plugins: {
         legend: {
-          display: true,
+          display: false,
           position: "top",
         },
       },
