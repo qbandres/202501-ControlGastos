@@ -6,16 +6,20 @@
 
     <div>
       <!-- Gráfico de tendencia diaria -->
-      <h3>Tendencia Diaria</h3>
-      <div id="tendenciaDiaria" class="chart-container">
-        <canvas id="dailyTrendChart"></canvas>
-      </div>
+      <h3>Tendencia Diaria (Promedio y Proyección)</h3>
+      <Graficos4D 
+        type="line" 
+        :data="tendenciaDiaria" 
+        :config="{ title: 'Tendencia Diaria (Promedio y Proyección)' }" 
+      />
 
       <!-- Gráfico de tendencia mensual -->
-      <h3>Tendencia Mensual</h3>
-      <div id="tendenciaMensual" class="chart-container">
-        <canvas id="monthlyTrendChart"></canvas>
-      </div>
+      <h3>Tendencia Mensual (Promedio y Proyección)</h3>
+      <Graficos4D 
+        type="line" 
+        :data="tendenciaMensual" 
+        :config="{ title: 'Tendencia Mensual (Promedio y Proyección)' }" 
+      />
     </div>
   </div>
 </template>
@@ -24,89 +28,51 @@
 import axios from "axios";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
-import Chart from "chart.js/auto";
+import Graficos4D from "@/components/Graficos4D.vue";
 
 export default {
-  components: { Titulo, Navbar },
+  components: { Titulo, Navbar, Graficos4D },
+  data() {
+    return {
+      tendenciaDiaria: [], // Datos para la tendencia diaria
+      tendenciaMensual: [] // Datos para la tendencia mensual
+    };
+  },
   methods: {
     // Obtener datos para la tendencia diaria
-    async fetchDailyTrend() {
+    async fetchTendenciaDiaria() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
-        const response = await axios.get(`${backendUrl}/tendencias/diarias`);
-        const data = response.data;
-
-        console.log("Datos de tendencia diaria:", data);
-
-        const ctx = document.getElementById("dailyTrendChart").getContext("2d");
-        new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: data.map((point) => point.fecha), // Fechas como etiquetas
-            datasets: [
-              {
-                label: "Tendencia diaria",
-                data: data.map((point) => point.cantidad), // Cantidades como datos
-                borderColor: "rgba(75, 192, 192, 1)",
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                tension: 0.4,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: { title: { display: true, text: "Fecha" } },
-              y: { title: { display: true, text: "Cantidad ($)" } },
-            },
-          },
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/tendencias/tendencias_diarias`, {
+          order: "asc",
+          n_ultimos_dias: 300
         });
+        this.tendenciaDiaria = response.data.data;
+        console.log("Datos recibidos para tendencia diaria:", this.tendenciaDiaria);
       } catch (error) {
         console.error("Error al obtener la tendencia diaria:", error);
       }
     },
-
     // Obtener datos para la tendencia mensual
-    async fetchMonthlyTrend() {
+    async fetchTendenciaMensual() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Obtener la URL del backend desde el archivo .env
-        const response = await axios.get(`${backendUrl}/tendencias/mensuales`);
-        const data = response.data;
-
-        console.log("Datos de tendencia mensual:", data);
-
-        const ctx = document.getElementById("monthlyTrendChart").getContext("2d");
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: data.map((point) => point.mes), // Meses como etiquetas
-            datasets: [
-              {
-                label: "Tendencia mensual",
-                data: data.map((point) => point.cantidad), // Cantidades como datos
-                backgroundColor: "rgba(153, 102, 255, 0.6)",
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: { title: { display: true, text: "Mes" } },
-              y: { title: { display: true, text: "Cantidad ($)" } },
-            },
-          },
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/tendencias/tendencias_mensuales`, {
+          order: "asc",
+          n_ultimos_meses: 12
         });
+        this.tendenciaMensual = response.data.data;
+        console.log("Datos recibidos para tendencia mensual:", this.tendenciaMensual);
       } catch (error) {
         console.error("Error al obtener la tendencia mensual:", error);
       }
-    },
+    }
   },
-
-  // Montar los gráficos al cargar la vista
   async mounted() {
-    await this.fetchDailyTrend();
-    await this.fetchMonthlyTrend();
-  },
+    // Llamar a los métodos para obtener los datos al cargar el componente
+    await this.fetchTendenciaDiaria();
+    await this.fetchTendenciaMensual();
+  }
 };
 </script>
 

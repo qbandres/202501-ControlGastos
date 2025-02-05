@@ -12,8 +12,8 @@
     <div class="dashboard-container">
       <!-- Columna de tablas -->
       <div class="dashboard-tables">
-        <h3>Gastos por Mes</h3>
-        <table v-if="gastosPorMes.length">
+        <h3>Gastos por Mes (Tabla)</h3>
+        <table v-if="gastosPorMesTabla.length">
           <thead>
             <tr>
               <th>Mes</th>
@@ -21,23 +21,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(gasto, index) in gastosPorMes" :key="index">
+            <tr v-for="(gasto, index) in gastosPorMesTabla" :key="index">
               <td>{{ gasto.label }}</td>
               <td>{{ gasto.value }}</td>
             </tr>
           </tbody>
         </table>
         <p v-else>No hay datos disponibles para "Gastos por Mes".</p>
-        <br>
-        <br>
 
+        <br>
         <hr style="border: 0; height: 0.5px; background: #000; opacity: 0.5;">
         <br>
-        
 
-
-        <h3>Gastos de los Últimos 7 Días</h3>
-        <table v-if="gastosUltimos7Dias.length">
+        <h3>Gastos de los Últimos 7 Días (Tabla)</h3>
+        <table v-if="gastosUltimos7DiasTabla.length">
           <thead>
             <tr>
               <th>Fecha</th>
@@ -45,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(gasto, index) in gastosUltimos7Dias" :key="index">
+            <tr v-for="(gasto, index) in gastosUltimos7DiasTabla" :key="index">
               <td>{{ gasto.label }}</td>
               <td>{{ gasto.value }}</td>
             </tr>
@@ -60,8 +57,8 @@
         <div class="graph-container">
           <Graficos2D 
             type="bar" 
-            :data="gastosPorMes" 
-            :config="{ title: 'Gastos por Mes', borderColor: 'blue' }" 
+            :data="gastosPorMesGrafico" 
+            :config="{ title: 'Gastos por Mes', borderColor: 'blue',borderWidth: '0.1' }" 
           />
         </div>
 
@@ -69,8 +66,8 @@
         <div class="graph-container">
           <Graficos2D 
             type="line" 
-            :data="gastosUltimos7Dias" 
-            :config="{ title: 'Gastos Últimos 7 Días', borderColor: 'red' }" 
+            :data="gastosUltimos7DiasGrafico" 
+            :config="{ title: 'Gastos Últimos 7 Días', borderColor: 'red',borderWidth: '1.5' }" 
           />
         </div>
       </div>
@@ -95,39 +92,80 @@ export default {
   components: { Titulo, Navbar, Tablagastos, Graficos2D },
   data() {
     return {
-      gastosPorMes: [], // Datos de gastos por mes
-      gastosUltimos7Dias: [] // Datos de gastos por día
+      gastosPorMesTabla: [],      // Datos de gastos por mes para la tabla (orden DESC)
+      gastosPorMesGrafico: [],    // Datos de gastos por mes para el gráfico (orden ASC)
+      gastosUltimos7DiasTabla: [], // Datos de gastos últimos 7 días para la tabla (orden DESC)
+      gastosUltimos7DiasGrafico: [] // Datos de gastos últimos 7 días para el gráfico (orden ASC)
     };
   },
   methods: {
-    async fetchGastosPorMes() {
+    // 🔹 Obtener datos para la tabla de "Gastos por Mes"
+    async fetchGastosPorMesTabla() {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`);
-        console.log("Datos recibidos para gastosPorMes:", response.data.data);
-        this.gastosPorMes = response.data.data; // Actualiza los datos
+        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
+          order: "desc", // Las tablas deben mostrar los datos en orden descendente
+          n_ultimos_meses: 10 // Mostramos los últimos 6 meses
+        });
+        console.log("Datos recibidos para gastosPorMesTabla:", response.data.data);
+        this.gastosPorMesTabla = response.data.data; 
       } catch (error) {
-        console.error("Error obteniendo los datos para gastos por mes:", error);
+        console.error("Error obteniendo los datos para gastos por mes (Tabla):", error);
       }
     },
-    async fetchGastosUltimos7Dias() {
+
+    // 🔹 Obtener datos para el gráfico de "Gastos por Mes"
+    async fetchGastosPorMesGrafico() {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
+          order: "asc", // Los gráficos deben mostrar los datos en orden ascendente
+          n_ultimos_meses: 10 // Mostramos los últimos 6 meses
+        });
+        console.log("Datos recibidos para gastosPorMesGrafico:", response.data.data);
+        this.gastosPorMesGrafico = response.data.data; 
+      } catch (error) {
+        console.error("Error obteniendo los datos para gastos por mes (Gráfico):", error);
+      }
+    },
+
+    // 🔹 Obtener datos para la tabla de "Gastos últimos 7 días"
+    async fetchGastosUltimos7DiasTabla() {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_dia`, {
-          x_column: "fecha",
-          y_column: "cantidad",
+          order: "desc", // Las tablas deben mostrar los datos en orden descendente
+          n_ultimos_dias: 10
+        });
+        console.log("Datos recibidos para gastosUltimos7DiasTabla:", response.data.data);
+        this.gastosUltimos7DiasTabla = response.data.data; 
+      } catch (error) {
+        console.error("Error obteniendo los datos para gastos últimos 7 días (Tabla):", error);
+      }
+    },
+
+    // 🔹 Obtener datos para el gráfico de "Gastos últimos 7 días"
+    async fetchGastosUltimos7DiasGrafico() {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_dia`, {
+          order: "asc", // Los gráficos deben mostrar los datos en orden ascendente
           n_ultimos_dias: 7
         });
-        console.log("Datos recibidos para gastosUltimos7Dias:", response.data.data);
-        this.gastosUltimos7Dias = response.data.data; // Actualiza los datos
+        console.log("Datos recibidos para gastosUltimos7DiasGrafico:", response.data.data);
+        this.gastosUltimos7DiasGrafico = response.data.data; 
       } catch (error) {
-        console.error("Error obteniendo los datos para los últimos 7 días:", error);
+        console.error("Error obteniendo los datos para gastos últimos 7 días (Gráfico):", error);
       }
     }
   },
+  
+  // 🔹 Llamamos a los métodos de obtención de datos al montar la vista
   async mounted() {
-    await this.fetchGastosPorMes();
-    await this.fetchGastosUltimos7Dias();
+    await this.fetchGastosPorMesTabla();
+    await this.fetchGastosPorMesGrafico();
+    await this.fetchGastosUltimos7DiasTabla();
+    await this.fetchGastosUltimos7DiasGrafico();
   }
 };
 </script>
@@ -165,12 +203,14 @@ export default {
 
 .graph-container {
   width: 100%;
-  height: 300px;
-  overflow: hidden;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; /* Asegúrate de no ocultar nada */
   border: 1px solid #ccc;
   padding: 10px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
 /* 📌 Tabla General de Gastos */
