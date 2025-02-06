@@ -86,7 +86,7 @@ import axios from "axios";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 import Tablagastos from "@/components/Tablagastos.vue";
-import Graficos2D from "@/components/graficos2D/index.vue";
+import Graficos2D from "@/components/Graficos2D/index.vue";
 
 export default {
   components: { Titulo, Navbar, Tablagastos, Graficos2D },
