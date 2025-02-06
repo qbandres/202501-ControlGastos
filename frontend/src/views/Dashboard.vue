@@ -75,7 +75,6 @@
 
     <!-- Contenedor independiente para la tabla de gastos generales -->
     <div class="general-gastos">
-      <h2>Gastos</h2>
       <Tablagastos />
     </div>
   </div>
