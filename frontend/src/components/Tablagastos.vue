@@ -1,8 +1,9 @@
 <template>
   <div class="tabla-gastos-container">
-    <h2>Gastos</h2>
+    <!-- 📌 Título con total de registros y suma total -->
+    <h2>Gastos (Total: {{ totalRegistros }} registros, Suma: {{ totalCantidad.toFixed(2) }})</h2>
 
-    <!-- Filtros -->
+    <!-- 🔹 Filtros -->
     <div class="filtros-container">
       <label>
         Usuario:
@@ -42,7 +43,7 @@
       <button @click="restablecerFiltros">Restablecer</button>
     </div>
 
-    <!-- Tabla de gastos -->
+    <!-- 🔹 Tabla de gastos -->
     <table>
       <thead>
         <tr>
@@ -64,10 +65,10 @@
           <td>{{ gasto.usuario }}</td>
           <td>{{ gasto.clase }}</td>
           <td>{{ gasto.asignacion }}</td>
-          <td>{{ gasto.cantidad }}</td>
+          <td>{{ gasto.cantidad.toFixed(2) }}</td>
           <td>{{ gasto.tipo }}</td>
           <td>{{ gasto.locacion }}</td>
-          <td>{{ gasto.fecha.split("T")[0] }}</td> <!-- Corregido formato fecha -->
+          <td>{{ gasto.fecha.split("T")[0] }}</td> <!-- 📌 Corregido formato fecha -->
           <td>{{ gasto.observaciones }}</td>
           <td>{{ gasto.metodo }}</td>
         </tr>
@@ -83,6 +84,8 @@ export default {
   data() {
     return {
       gastos: [], // Datos de la tabla
+      totalCantidad: 0, // Suma total de gastos
+      totalRegistros: 0, // Cantidad de registros mostrados
       filtros: {
         usuario: "",
         clase: "",
@@ -101,8 +104,10 @@ export default {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.get(`${backendUrl}/tabla-gastos`);
         this.gastos = response.data.data;
+        this.totalCantidad = response.data.total_cantidad;
+        this.totalRegistros = response.data.total_registros;
 
-        // Obtener listas únicas de usuarios y clases en una sola consulta
+        // 📌 Obtener listas únicas de usuarios y clases en una sola consulta
         const uniqueUsuarios = new Set();
         const uniqueClases = new Set();
         this.gastos.forEach((gasto) => {
@@ -137,6 +142,8 @@ export default {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/tabla-gastos`, payload);
         this.gastos = response.data.data;
+        this.totalCantidad = response.data.total_cantidad;
+        this.totalRegistros = response.data.total_registros;
       } catch (error) {
         console.error("Error al aplicar filtros:", error);
       }

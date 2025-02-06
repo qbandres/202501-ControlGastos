@@ -24,7 +24,8 @@ class FiltrosGastos(BaseModel):
 @router.post("/tabla-gastos")
 def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
     """
-    Devuelve los registros filtrados de la tabla ControlGastos según los parámetros enviados.
+    Devuelve los registros filtrados de la tabla ControlGastos según los parámetros enviados
+    junto con estadísticas como la suma total y la cantidad de registros.
     """
     try:
         # Base de la consulta
@@ -58,13 +59,26 @@ def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
         if filters.clase_in:
             query = query.filter(ControlGastos.clase.in_(filters.clase_in))
 
-        # Ordenar por fecha descendente y limitar resultados
-        query = query.order_by(ControlGastos.fecha.desc()).limit(100)  # Límite de 100 registros por solicitud
-        results = query.all()
+        # Ordenar por fecha descendente
+        query = query.order_by(ControlGastos.fecha.desc())
+
+        # Obtener todos los resultados para estadísticas
+        all_results = query.all()
+        total_cantidad = sum(gasto.cantidad for gasto in all_results)  # Suma total
+        total_registros = len(all_results)  # Cantidad de registros
+
+        # Limitar a 100 resultados para la tabla
+        results = all_results[:100]
 
         # Verificar si hay resultados
         if not results:
-            return {"status": "success", "message": "No se encontraron registros con los filtros aplicados.", "data": []}
+            return {
+                "status": "success",
+                "message": "No se encontraron registros con los filtros aplicados.",
+                "data": [],
+                "total_cantidad": 0,
+                "total_registros": 0
+            }
 
         # Formatear la respuesta
         return {
@@ -84,6 +98,8 @@ def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
                 }
                 for gasto in results
             ],
+            "total_cantidad": total_cantidad,
+            "total_registros": total_registros
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al filtrar datos: {str(e)}")
@@ -93,7 +109,7 @@ def get_filtered_gastos(filters: FiltrosGastos, db: Session = Depends(get_db)):
 @router.get("/tabla-gastos")
 def get_last_20_gastos(db: Session = Depends(get_db)):
     """
-    Devuelve los últimos 20 gastos según la fecha de ingreso.
+    Devuelve los últimos 20 gastos según la fecha de ingreso, junto con estadísticas.
     """
     try:
         gastos = (
@@ -105,7 +121,17 @@ def get_last_20_gastos(db: Session = Depends(get_db)):
 
         # Verificar si hay resultados
         if not gastos:
-            return {"status": "success", "message": "No hay datos disponibles.", "data": []}
+            return {
+                "status": "success",
+                "message": "No hay datos disponibles.",
+                "data": [],
+                "total_cantidad": 0,
+                "total_registros": 0
+            }
+
+        # Calcular estadísticas
+        total_cantidad = sum(gasto.cantidad for gasto in gastos)  # Suma total
+        total_registros = len(gastos)  # Cantidad de registros
 
         # Formatear la respuesta
         return {
@@ -125,6 +151,8 @@ def get_last_20_gastos(db: Session = Depends(get_db)):
                 }
                 for gasto in gastos
             ],
+            "total_cantidad": total_cantidad,
+            "total_registros": total_registros
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener datos: {str(e)}")
