@@ -75,20 +75,20 @@
 
     <!-- Contenedor independiente para la tabla de gastos generales -->
     <div class="general-gastos">
-      <Tablagastos />
+      <TablaGastos />
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
-import Tablagastos from "@/components/Tablagastos.vue";
+import TablaGastos from "@/components/expenses/TablaGastos.vue";
 import Graficos2D from "@/components/Graficos2D/index.vue";
 
 export default {
-  components: { Titulo, Navbar, Tablagastos, Graficos2D },
+  components: { Titulo, Navbar, TablaGastos, Graficos2D },
   data() {
     return {
       gastosPorMesTabla: [],      // Datos de gastos por mes para la tabla (orden DESC)
@@ -101,8 +101,7 @@ export default {
     // 🔹 Obtener datos para la tabla de "Gastos por Mes"
     async fetchGastosPorMesTabla() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
+        const response = await expenseService.getDynamicDateMonthData({
           order: "desc", // Las tablas deben mostrar los datos en orden descendente
           n_ultimos_meses: 10 // Mostramos los últimos 6 meses
         });
@@ -116,8 +115,7 @@ export default {
     // 🔹 Obtener datos para el gráfico de "Gastos por Mes"
     async fetchGastosPorMesGrafico() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_mes`, {
+        const response = await expenseService.getDynamicDateMonthData({
           order: "asc", // Los gráficos deben mostrar los datos en orden ascendente
           n_ultimos_meses: 10 // Mostramos los últimos 6 meses
         });
@@ -131,8 +129,7 @@ export default {
     // 🔹 Obtener datos para la tabla de "Gastos últimos 7 días"
     async fetchGastosUltimos7DiasTabla() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_dia`, {
+        const response = await expenseService.getDynamicDateDayData({
           order: "desc", // Las tablas deben mostrar los datos en orden descendente
           n_ultimos_dias: 10
         });
@@ -146,8 +143,7 @@ export default {
     // 🔹 Obtener datos para el gráfico de "Gastos últimos 7 días"
     async fetchGastosUltimos7DiasGrafico() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/graficos_dinamicos/datos_fecha_dia`, {
+        const response = await expenseService.getDynamicDateDayData({
           order: "asc", // Los gráficos deben mostrar los datos en orden ascendente
           n_ultimos_dias: 7
         });

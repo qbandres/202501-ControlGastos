@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 
@@ -169,10 +169,7 @@ export default {
   methods: {
     async fetchGastos() {
       try {
-        // Usamos la variable de entorno para obtener la URL del backend
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-        const response = await axios.get(`${backendUrl}/tabla-gastos`);
+        const response = await expenseService.getExpenses();
         this.gastos = response.data.data;
       } catch (error) {
         console.error("Error al cargar los gastos:", error);
@@ -180,9 +177,7 @@ export default {
     },
     async applyFilters() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-        const response = await axios.post(`${backendUrl}/tabla-gastos`, this.filters);
+        const response = await expenseService.filterExpenses(this.filters);
         this.gastos = response.data.data;
       } catch (error) {
         console.error("Error al aplicar filtros:", error);
@@ -197,9 +192,7 @@ export default {
     },
     async confirmEdit() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-        await axios.put(`${backendUrl}/modificar/${this.selectedGasto.id}`, this.selectedGasto);
+        await expenseService.updateExpense(this.selectedGasto.id, this.selectedGasto);
         alert("Gasto modificado exitosamente");
         this.selectedGasto = null;
         this.fetchGastos(); // Actualiza la tabla
@@ -213,9 +206,7 @@ export default {
     async confirmDelete(id) {
       if (confirm("¿Está seguro de que desea eliminar este gasto?")) {
         try {
-          const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-          await axios.delete(`${backendUrl}/modificar/${id}`);
+          await expenseService.deleteExpense(id);
           alert("Gasto eliminado exitosamente");
           this.fetchGastos();
         } catch (error) {

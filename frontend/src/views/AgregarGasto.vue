@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 
@@ -127,11 +127,8 @@ export default {
       try {
         console.log("Datos enviados al backend:", this.newExpense); // Ver los datos antes de enviarlos
 
-        // Obtener la URL del backend desde la variable de entorno
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-        // Enviar el gasto al backend
-        const response = await axios.post(`${backendUrl}/agregar-gasto`, this.newExpense);
+        // Enviar el gasto al backend usando el servicio
+        const response = await expenseService.addExpense(this.newExpense);
         console.log("Gasto agregado:", response.data);
 
         // Limpiar el formulario después de confirmar

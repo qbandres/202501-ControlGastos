@@ -16,7 +16,7 @@ venv/
 *.env.*
 
 # Logs
-*.log
+*.log	
 *.log.*
 
 # Archivos creados por el editor/IDE

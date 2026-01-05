@@ -1,7 +1,7 @@
 <template>
   <div class="tabla-gastos-container">
     <!-- 📌 Título con total de registros y suma total -->
-    <h2>Gastos (Total: {{ totalRegistros }} registros, Suma: {{ totalCantidad.toFixed(2) }})</h2>
+    <h2>Gastos (Total: {{ totalRegistros }} registros, Suma: {{ totalCantidad }})</h2>
 
     <!-- 🔹 Filtros -->
     <div class="filtros-container">
@@ -62,13 +62,13 @@
       <tbody>
         <tr v-for="gasto in gastos" :key="gasto.id">
           <td>{{ gasto.id }}</td>
-          <td>{{ gasto.usuario }}</td>
+          <td>{{ gasto.user ? gasto.user.username : (gasto.user_id || 'N/A') }}</td>
           <td>{{ gasto.clase }}</td>
           <td>{{ gasto.asignacion }}</td>
-          <td>{{ gasto.cantidad.toFixed(2) }}</td>
+          <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.tipo }}</td>
           <td>{{ gasto.locacion }}</td>
-          <td>{{ gasto.fecha.split("T")[0] }}</td> <!-- 📌 Corregido formato fecha -->
+          <td>{{ gasto.fecha ? gasto.fecha.split("T")[0] : '' }}</td>
           <td>{{ gasto.observaciones }}</td>
           <td>{{ gasto.metodo }}</td>
         </tr>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 
 export default {
   data() {
@@ -101,21 +101,12 @@ export default {
   methods: {
     async cargarGastos() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.get(`${backendUrl}/tabla-gastos`);
+        const response = await expenseService.getExpenses();
         this.gastos = response.data.data;
         this.totalCantidad = response.data.total_cantidad;
         this.totalRegistros = response.data.total_registros;
 
-        // 📌 Obtener listas únicas de usuarios y clases en una sola consulta
-        const uniqueUsuarios = new Set();
-        const uniqueClases = new Set();
-        this.gastos.forEach((gasto) => {
-          if (gasto.usuario) uniqueUsuarios.add(gasto.usuario);
-          if (gasto.clase) uniqueClases.add(gasto.clase);
-        });
-        this.usuarios = Array.from(uniqueUsuarios);
-        this.clases = Array.from(uniqueClases);
+        this.procesarFiltrosUnicos();
       } catch (error) {
         console.error("Error al cargar los gastos:", error);
       }
@@ -139,14 +130,27 @@ export default {
       console.log("Payload enviado al backend:", payload);
 
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/tabla-gastos`, payload);
+        const response = await expenseService.filterExpenses(payload);
         this.gastos = response.data.data;
         this.totalCantidad = response.data.total_cantidad;
         this.totalRegistros = response.data.total_registros;
       } catch (error) {
         console.error("Error al aplicar filtros:", error);
       }
+    },
+    procesarFiltrosUnicos() {
+      // 📌 Obtener listas únicas de usuarios y clases en una sola consulta
+      const uniqueUsuarios = new Set();
+      const uniqueClases = new Set();
+      this.gastos.forEach((gasto) => {
+        // Adaptar a la nueva estructura: user puede ser un objeto o un ID
+        const usuarioNombre = gasto.user ? gasto.user.username : (gasto.user_id ? String(gasto.user_id) : null);
+        if (usuarioNombre) uniqueUsuarios.add(usuarioNombre);
+        
+        if (gasto.clase) uniqueClases.add(gasto.clase);
+      });
+      this.usuarios = Array.from(uniqueUsuarios);
+      this.clases = Array.from(uniqueClases);
     },
     restablecerFiltros() {
       this.filtros = {

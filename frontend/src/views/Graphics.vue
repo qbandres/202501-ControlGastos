@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 import Chart from "chart.js/auto";
@@ -81,11 +81,8 @@ export default {
   methods: {
     async generateChart() {
       try {
-        // Obtener la URL del backend desde las variables de entorno
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        
         // Obtener datos para el gráfico principal
-        const response = await axios.post(`${backendUrl}/graficos/x-y`, {
+        const response = await expenseService.getXYChartData({
           x_axis: this.selectedAxis.x,
           y_axis: this.selectedAxis.y,
           filters: this.filters,
@@ -151,11 +148,8 @@ export default {
     },
     async generateSecondaryChart() {
       try {
-        // Obtener la URL del backend desde las variables de entorno
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
         // Obtener datos para el gráfico secundario
-        const response = await axios.post(`${backendUrl}/graficos/x-y`, {
+        const response = await expenseService.getXYChartData({
           x_axis: "clase", // Eje X fijo en "clase"
           y_axis: this.selectedAxis.y,
           filters: this.filters,

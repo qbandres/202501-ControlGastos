@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import authService from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
 
 export default {
@@ -43,8 +43,7 @@ export default {
       console.log("Attempting login with username:", this.username);
 
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/login`, {
+        const response = await authService.login({
           username: this.username,
           password: this.password,
         });

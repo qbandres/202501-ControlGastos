@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import expenseService from "@/services/expenseService";
 import Titulo from "@/components/Titulo.vue";
 import Navbar from "@/components/Navbar.vue";
 import Graficos4D from "@/components/Graficos4D.vue";
@@ -42,8 +42,7 @@ export default {
     // Obtener datos para la tendencia diaria
     async fetchTendenciaDiaria() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/tendencias/tendencias_diarias`, {
+        const response = await expenseService.getDailyTrends({
           order: "asc",
           n_ultimos_dias: 300
         });
@@ -56,8 +55,7 @@ export default {
     // Obtener datos para la tendencia mensual
     async fetchTendenciaMensual() {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/tendencias/tendencias_mensuales`, {
+        const response = await expenseService.getMonthlyTrends({
           order: "asc",
           n_ultimos_meses: 12
         });
