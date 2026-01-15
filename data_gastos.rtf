@@ -1,0 +1,195 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- 1. Limpiar la tabla para evitar duplicados\
+TRUNCATE TABLE public.datagastos RESTART IDENTITY CASCADE;\
+\
+-- 2. Insertar los 202 registros vinculados a user_id (1: Yovana, 2: Andres)\
+INSERT INTO public.datagastos (id, user_id, clase, asignacion, cantidad, tipo, locacion, fecha, f_ingreso, observaciones, metodo) VALUES\
+(48, 2, 'Tecnologia', 'Andr\'e9s', 66.00, 'Egreso', 'Lima', '2024-11-18', '2024-11-27 03:00:34', 'Tecnologia', 'Efectivo'),\
+(49, 2, 'Vestimenta', 'Fam_Yovana', 164.00, 'Egreso', 'Lima', '2024-11-20', '2024-11-27 03:01:43', 'Ropa Diana hija', 'Efectivo'),\
+(5, 1, 'Vestimenta', 'Alonso', 120.00, 'Egreso', 'Lima', '2024-11-10', '2024-11-11 16:44:35', 'Cont\'e9 ropa deportiva', 'Tarjeta'),\
+(8, 2, 'Educaci\'f3n', 'Alonso', 15.00, 'Egreso', 'Lima', '2024-11-10', '2024-11-11 19:52:19', 'Estacionamiento entradas en ALonso', 'Tarjeta'),\
+(11, 2, 'Salud', 'Andr\'e9s', 15.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-11 22:28:06', 'Pago de consulta', 'Tarjeta'),\
+(12, 1, 'Salud', 'Claudia', 15.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-11 22:30:13', 'Pago consulta santa martha', 'Tarjeta'),\
+(13, 2, 'Restaurant', 'Fam_QP', 60.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-11 23:04:33', 'Pizza hut sjm', 'Tarjeta'),\
+(14, 1, 'Alimentos', 'Fam_QP', 25.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-11 23:07:59', 'Ingredientes cena chaufa', 'Tarjeta'),\
+(15, 2, 'Restaurant', 'Fam_QP', 380.00, 'Egreso', 'Lima', '2024-11-09', '2024-11-11 23:14:35', 'El vaquero almuerzo', 'Tarjeta'),\
+(17, 2, 'Recreacion', 'Alonso', 15.00, 'Egreso', 'Lima', '2024-11-09', '2024-11-12 03:36:43', 'Juego en linea', 'Tarjeta'),\
+(18, 2, 'Recreacion', 'Claudia', 17.00, 'Egreso', 'Lima', '2024-11-09', '2024-11-12 03:37:17', 'Roblox', 'Tarjeta'),\
+(19, 2, 'Recreacion', 'Lucia', 17.00, 'Egreso', 'Lima', '2024-11-09', '2024-11-12 03:37:42', 'Roblox', 'Tarjeta'),\
+(22, 2, 'Restaurant', 'Andr\'e9s', 100.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 03:39:40', 'Embarcdero', 'Tarjeta'),\
+(16, 2, 'transf_YP', 'Yovana', 80.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-12 02:10:44', 'Pago para voley lucia', 'Tarjeta'),\
+(23, 1, 'Educaci\'f3n', 'Lucia', 80.00, 'Egreso', 'Lima', '2024-11-11', '2024-11-12 03:42:21', 'Voley lucia ', 'Tarjeta'),\
+(6, 1, 'Alimentos', 'Fam_QP', 30.00, 'Egreso', 'Lima', '2024-11-10', '2024-11-11 16:48:39', 'Desayuno pana con palta', 'Efectivo'),\
+(24, 2, 'Combustible', 'Andr\'e9s', 187.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 15:55:36', 'Combustible lima', 'Tarjeta'),\
+(25, 2, 'centroComercial', 'Fam_QP', 200.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 15:56:07', 'Compra en vivanda', 'Tarjeta'),\
+(21, 2, 'Restaurant', 'Andr\'e9s', 23.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 03:39:02', 'Bicmac macdonals', 'Tarjeta'),\
+(26, 2, 'Restaurant', 'Fam_QP', 102.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 16:04:39', 'El embarcadero', 'Efectivo'),\
+(20, 2, 'Restaurant', 'Fam_QP', 75.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 03:38:32', 'Almuerzo Norky\'92s colegio', 'Tarjeta'),\
+(27, 2, 'Gustitos', 'Fam_QP', 200.00, 'Egreso', 'Arequipa', '2024-11-06', '2024-11-12 16:18:05', 'Iberica', 'Tarjeta'),\
+(28, 2, 'Salud', 'Andr\'e9s', 100.89, 'Egreso', 'Lima', '2024-11-12', '2024-11-12 17:26:32', 'Resonancia en cerema', 'Tarjeta'),\
+(30, 2, 'Salud', 'Andr\'e9s', 40.00, 'Egreso', 'Lima', '2024-11-07', '2024-11-12 18:35:18', 'Pastilla para glucosa inkafarma', 'Tarjeta'),\
+(29, 2, 'Educaci\'f3n', 'Andr\'e9s', 1333.00, 'Egreso', 'Lima', '2024-11-08', '2024-11-12 18:34:13', 'Pago colegiatura', 'Tarjeta'),\
+(31, 1, 'Alimentos', 'Fam_QP', 49.00, 'Egreso', 'Lima', '2024-11-12', '2024-11-12 18:41:56', 'Varios alimentos', 'Efectivo'),\
+(33, 1, 'Alimentos', 'Fam_QP', 23.00, 'Egreso', 'Lima', '2024-11-12', '2024-11-13 22:20:04', 'Atunes y v\'edveres', 'Efectivo'),\
+(35, 1, 'Alimentos', 'Fam_QP', 59.00, 'Egreso', 'Lima', '2024-11-13', '2024-11-13 22:40:47', 'Pan, az\'facar, l\'e1cteos', 'Efectivo'),\
+(36, 2, 'transf_YP', 'Yovana', 200.00, 'Egreso', 'Lima', '2024-11-14', '2024-11-15 02:13:30', 'Gastos Varios', 'Efectivo'),\
+(37, 1, 'Vestimenta', 'Alonso', 105.00, 'Egreso', 'Lima', '2024-11-13', '2024-11-15 07:08:12', 'Ropa Alonso', 'Efectivo'),\
+(38, 1, 'Alimentos', 'Fam_QP', 50.00, 'Egreso', 'Lima', '2024-11-13', '2024-11-15 23:10:17', 'Carne y verduras', 'Efectivo'),\
+(39, 1, 'Alimentos', 'Fam_QP', 33.00, 'Egreso', 'Lima', '2024-11-14', '2024-11-15 23:36:55', 'Frutas y l\'e1cteos', 'Efectivo'),\
+(40, 1, 'Vestimenta', 'Yovana', 90.00, 'Egreso', 'Lima', '2024-11-14', '2024-11-15 23:40:11', 'Chompa y regalo', 'Efectivo'),\
+(41, 1, 'Alimentos', 'Fam_QP', 23.50, 'Egreso', 'Lima', '2024-11-14', '2024-11-15 23:43:07', 'V\'edveres varios', 'Efectivo'),\
+(42, 1, 'Alimentos', 'Fam_QP', 37.00, 'Egreso', 'Lima', '2024-11-15', '2024-11-15 23:48:42', 'Fresa, leche, at\'fan', 'Efectivo'),\
+(43, 2, 'Restaurant', 'Fam_QP', 190.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 02:52:58', 'Villa Chicken', 'Tarjeta'),\
+(44, 2, 'Salud', 'Andr\'e9s', 15.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 02:53:31', 'Consulta Santa Marta', 'Tarjeta'),\
+(45, 2, 'Gustitos', 'Fam_QP', 20.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 02:55:26', 'Empanadas', 'Efectivo'),\
+(46, 2, 'Salud', 'Andr\'e9s', 109.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 02:58:30', 'Rodillera', 'Efectivo'),\
+(47, 2, 'Educaci\'f3n', 'Alonso', 47.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 02:58:58', 'Pelota', 'Tarjeta'),\
+(50, 2, 'Recreacion', 'Lucia', 17.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:04:12', 'Roblox', 'Efectivo'),\
+(51, 2, 'Recreacion', 'Claudia', 17.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:04:29', 'Roblox', 'Tarjeta'),\
+(52, 2, 'Alimentos', 'Fam_QP', 26.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:06:41', 'Men\'fa pollo', 'Tarjeta'),\
+(53, 2, 'Gustitos', 'Yovana', 479.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:07:39', 'Carnes parrilla', 'Tarjeta'),\
+(54, 2, 'centroComercial', 'Fam_QP', 336.00, 'Egreso', 'Lima', '2024-11-23', '2024-11-27 03:08:20', 'Compras cumplea\'f1os', 'Tarjeta'),\
+(55, 2, 'Restaurant', 'Andr\'e9s', 230.00, 'Egreso', 'Lima', '2024-11-23', '2024-11-27 03:09:19', 'Chilis', 'Tarjeta'),\
+(56, 2, 'Tecnologia', 'Andr\'e9s', 670.00, 'Egreso', 'Lima', '2024-11-23', '2024-11-27 03:14:35', 'Platzi', 'Tarjeta'),\
+(57, 1, 'Salud', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2024-11-26', '2024-11-27 03:15:45', 'Consultas m\'e9dicas', 'Tarjeta'),\
+(58, 2, 'Gustitos', 'Yovana', 84.00, 'Egreso', 'Lima', '2024-11-23', '2024-11-27 03:18:03', 'Arreglo Yovana', 'Tarjeta'),\
+(59, 2, 'Gustitos', 'Andr\'e9s', 309.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:19:01', 'Carne parrilla', 'Tarjeta'),\
+(60, 2, 'transf_YP', 'Yovana', 300.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 03:19:42', 'Yape Yovana', 'Tarjeta'),\
+(61, 2, 'transf_YP', 'Yovana', 100.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 03:20:41', 'Transferencia', 'Efectivo'),\
+(62, 2, 'transf_YP', 'Yovana', 100.00, 'Egreso', 'Lima', '2024-11-15', '2024-11-27 03:21:01', 'Gasto', 'Efectivo'),\
+(63, 2, 'transf_YP', 'Yovana', 200.00, 'Egreso', 'Lima', '2024-11-14', '2024-11-27 03:21:15', 'Gasto', 'Efectivo'),\
+(64, 2, 'Vestimenta', 'Yovana', 620.00, 'Egreso', 'Lima', '2024-11-22', '2024-11-27 03:23:41', 'Ropa Yovana', 'Tarjeta'),\
+(65, 2, 'Vestimenta', 'Fam_Andres', 139.00, 'Egreso', 'Lima', '2024-11-21', '2024-11-27 03:24:43', 'Regalo Edith', 'Efectivo'),\
+(66, 2, 'Gustitos', 'Fam_QP', 22.00, 'Egreso', 'Lima', '2024-11-21', '2024-11-27 03:25:43', 'Gaseosas colegio', 'Efectivo'),\
+(67, 2, 'Alimentos', 'Fam_QP', 86.00, 'Egreso', 'Lima', '2024-11-21', '2024-11-27 03:26:35', 'Almuerzo colegio', 'Efectivo'),\
+(68, 2, 'Servicios', 'Fam_QP', 247.00, 'Egreso', 'Lima', '2024-11-18', '2024-11-27 03:27:15', 'Luz', 'Efectivo'),\
+(69, 2, 'Alimentos', 'Fam_QP', 70.00, 'Egreso', 'Lima', '2024-11-24', '2024-11-27 03:49:45', 'Chaufa', 'Efectivo'),\
+(70, 2, 'Vestimenta', 'Alonso', 290.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 03:55:21', 'Zapatillas Alonso', 'Efectivo'),\
+(71, 2, 'Vestimenta', 'Lucia', 235.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 03:55:47', 'Zapatillas Lucia', 'Efectivo'),\
+(72, 2, 'Vestimenta', 'Claudia', 235.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 03:56:00', 'Zapatillas Claudia', 'Efectivo'),\
+(73, 2, 'Alimentos', 'Fam_QP', 38.00, 'Egreso', 'Lima', '2024-11-16', '2024-11-27 03:57:16', 'Anticuchos', 'Efectivo'),\
+(74, 2, 'centroComercial', 'Fam_QP', 53.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 03:58:16', 'Chif\'f3n', 'Efectivo'),\
+(75, 2, 'Servicios', 'Andr\'e9s', 125.00, 'Egreso', 'Lima', '2024-11-18', '2024-11-27 03:59:00', 'Celular Claro', 'Efectivo'),\
+(76, 2, 'Servicios', 'Yovana', 62.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 03:59:22', 'Celular Yovana', 'Tarjeta'),\
+(77, 2, 'Servicios', 'Fam_Andres', 47.00, 'Egreso', 'Lima', '2024-11-17', '2024-11-27 03:59:48', 'Celular Claro', 'Efectivo'),\
+(78, 1, 'Alimentos', 'Fam_QP', 70.00, 'Egreso', 'Lima', '2024-11-27', '2024-11-30 18:25:04', 'Gastos diarios', 'Efectivo'),\
+(79, 1, 'Alimentos', 'Fam_QP', 75.00, 'Egreso', 'Lima', '2024-11-28', '2024-11-30 18:27:39', 'Lonchera y pasajes', 'Efectivo'),\
+(80, 1, 'Alimentos', 'Fam_QP', 80.00, 'Egreso', 'Lima', '2024-11-29', '2024-11-30 18:34:55', 'Lonchera y pasajes', 'Efectivo'),\
+(81, 1, 'Educaci\'f3n', 'Lucia', 73.00, 'Egreso', 'Lima', '2024-11-29', '2024-12-09 18:43:26', 'Navidad colegio', 'Efectivo'),\
+(82, 1, 'Educaci\'f3n', 'Fam_QP', 75.00, 'Egreso', 'Lima', '2024-12-01', '2024-12-09 18:55:49', 'Adviento ni\'f1os', 'Efectivo'),\
+(83, 1, 'Alimentos', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2024-12-01', '2024-12-09 18:57:23', 'Desayuno', 'Efectivo'),\
+(84, 1, 'Alimentos', 'Fam_QP', 90.00, 'Egreso', 'Lima', '2024-12-02', '2024-12-09 19:01:00', 'Gasto diario', 'Efectivo'),\
+(85, 1, 'Alimentos', 'Fam_QP', 120.00, 'Egreso', 'Lima', '2024-12-09', '2024-12-10 05:17:01', 'V\'edveres varios', 'Efectivo'),\
+(86, 1, 'Recreacion', 'Alonso', 67.00, 'Egreso', 'Lima', '2024-12-15', '2024-12-16 23:43:40', 'Regalo Axel', 'Efectivo'),\
+(87, 1, 'Recreacion', 'Lucia', 115.00, 'Egreso', 'Lima', '2024-12-15', '2024-12-16 23:48:44', 'Navidad Luc\'eda', 'Efectivo'),\
+(88, 1, 'Vestimenta', 'Alonso', 130.00, 'Egreso', 'Lima', '2024-12-07', '2024-12-16 23:50:19', 'Jeans y polo', 'Efectivo'),\
+(89, 1, 'Alimentos', 'Andr\'e9s', 85.00, 'Egreso', 'Lima', '2024-12-11', '2024-12-16 23:52:46', 'Pasajes y lonchera', 'Efectivo'),\
+(90, 1, 'Alimentos', 'Fam_QP', 60.00, 'Egreso', 'Lima', '2024-12-11', '2024-12-16 23:53:35', 'Pollo brasa', 'Efectivo'),\
+(91, 1, 'Sabina', 'Andr\'e9s', 55.00, 'Egreso', 'Lima', '2024-12-11', '2024-12-16 23:54:31', 'Torta cumple', 'Efectivo'),\
+(92, 1, 'Alimentos', 'Fam_QP', 90.00, 'Egreso', 'Lima', '2024-12-16', '2024-12-16 23:56:23', 'Pasajes lonchera', 'Efectivo'),\
+(93, 1, 'Alimentos', 'Fam_QP', 50.00, 'Egreso', 'Lima', '2024-12-03', '2024-12-16 23:58:12', 'Desayuno cena', 'Efectivo'),\
+(94, 1, 'Alimentos', 'Fam_QP', 95.00, 'Egreso', 'Lima', '2024-12-13', '2024-12-17 00:01:02', 'Pasajes lonchera', 'Efectivo'),\
+(95, 1, 'Alimentos', 'Fam_QP', 80.00, 'Egreso', 'Lima', '2024-12-12', '2024-12-17 00:02:14', 'Pasajes lonchera', 'Efectivo'),\
+(96, 1, 'Alimentos', 'Fam_QP', 80.00, 'Egreso', 'Lima', '2024-12-12', '2024-12-17 00:21:18', 'Pasajes lonchera', 'Efectivo'),\
+(97, 1, 'Alimentos', 'Fam_QP', 55.00, 'Egreso', 'Lima', '2024-12-04', '2024-12-17 00:24:13', 'Lonchera', 'Efectivo'),\
+(98, 1, 'Alimentos', 'Fam_QP', 60.00, 'Egreso', 'Lima', '2024-12-05', '2024-12-17 00:24:56', 'Lonchera', 'Efectivo'),\
+(99, 1, 'Alimentos', 'Fam_QP', 50.00, 'Egreso', 'Lima', '2024-12-06', '2024-12-17 00:26:03', 'Lonchera', 'Efectivo'),\
+(100, 1, 'Alimentos', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2024-12-10', '2024-12-17 00:32:51', 'Almuerzo', 'Efectivo'),\
+(104, 1, 'Alimentos', 'Fam_QP', 100.00, 'Egreso', 'Lima', '2025-01-21', '2025-01-24 05:12:52', 'Gastos diarios', 'Efectivo'),\
+(105, 1, 'Alimentos', 'Fam_QP', 40.00, 'Egreso', 'Lima', '2025-01-23', '2025-01-24 05:14:30', 'Alimentaci\'f3n', 'Efectivo'),\
+(106, 1, 'Alimentos', 'Fam_QP', 46.50, 'Egreso', 'Lima', '2025-01-22', '2025-01-24 05:18:46', 'V\'edveres', 'Efectivo'),\
+(125, 1, 'Alimentos', 'Fam_QP', 51.00, 'Egreso', 'Lima', '2025-01-29', '2025-02-01 05:21:10', 'Pollo broaster', 'Efectivo'),\
+(126, 1, 'Alimentos', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2025-01-30', '2025-02-01 05:27:10', 'V\'edveres limpieza', 'Efectivo'),\
+(110, 1, 'Educaci\'f3n', 'Claudia', 800.00, 'Egreso', 'Lima', '2025-01-15', '2025-01-24 05:22:53', 'MATRICULA', 'Efectivo'),\
+(109, 1, 'Educaci\'f3n', 'Lucia', 800.00, 'Egreso', 'Lima', '2025-01-15', '2025-01-24 05:22:34', 'MATRICULA', 'Efectivo'),\
+(108, 1, 'Educaci\'f3n', 'Alonso', 800.00, 'Egreso', 'Lima', '2025-01-15', '2025-01-24 05:22:18', 'MATRICULA', 'Efectivo'),\
+(111, 1, 'Alimentos', 'Fam_QP', 70.00, 'Egreso', 'Lima', '2025-01-24', '2025-01-25 04:35:59', 'Frutas y agua', 'Efectivo'),\
+(114, 1, 'Alimentos', 'Fam_QP', 36.00, 'Egreso', 'Lima', '2025-01-25', '2025-01-25 16:17:50', 'V\'edveres varios', 'Efectivo'),\
+(115, 1, 'Alimentos', 'Fam_QP', 53.50, 'Egreso', 'Lima', '2025-01-26', '2025-01-31 18:54:15', 'Cena y v\'edveres', 'Efectivo'),\
+(116, 1, 'Alimentos', 'Fam_QP', 85.00, 'Egreso', 'Lima', '2025-01-21', '2025-02-01 04:36:27', 'Limpieza hogar', 'Efectivo'),\
+(122, 1, 'Alimentos', 'Fam_QP', 96.00, 'Egreso', 'Lima', '2025-01-27', '2025-02-01 04:56:38', 'Agua y regalo', 'Efectivo'),\
+(127, 2, 'Tecnolog\'eda', 'Andr\'e9s', 700.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-04 14:36:37', 'Servidor', 'Efectivo'),\
+(128, 2, 'Gustitos', 'Lucia', 10.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-04 14:37:31', 'Queque', 'Efectivo'),\
+(129, 2, 'Gustitos', 'Claudia', 10.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-04 14:37:55', 'Queque', 'Efectivo'),\
+(130, 1, 'Gustitos', 'Andr\'e9s', 9.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-04 14:38:19', 'Choripan', 'Efectivo'),\
+(131, 2, 'Restaurant', 'Fam_QP', 86.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-04 14:39:09', 'Pollo broaster', 'Efectivo'),\
+(132, 2, 'Alimentos', 'Fam_QP', 50.00, 'Egreso', 'Lima', '2025-02-02', '2025-02-04 14:39:48', 'Desayuno', 'Efectivo'),\
+(133, 2, 'Tecnolog\'eda', 'Andr\'e9s', 26.00, 'Egreso', 'Lima', '2025-02-02', '2025-02-04 14:40:14', 'Teclado', 'Efectivo'),\
+(124, 1, 'Alimentos', 'Fam_QP', 41.00, 'Egreso', 'Lima', '2025-01-28', '2025-02-01 05:07:05', 'Queso y leche', 'Efectivo'),\
+(134, 2, 'Servicios', 'Andr\'e9s', 432.00, 'Egreso', 'Lima', '2025-01-28', '2025-02-04 23:16:38', 'Taxis Alfredo', 'Efectivo'),\
+(135, 2, 'Recreaci\'f3n', 'Andr\'e9s', 16.00, 'Egreso', 'Lima', '2025-01-30', '2025-02-04 23:18:09', 'F\'fatbol', 'Efectivo'),\
+(136, 1, 'Servicios', 'Fam_QP', 150.00, 'Egreso', 'Lima', '2025-02-05', '2025-02-05 15:02:11', 'Vidrio mesa', 'Efectivo'),\
+(107, 2, 'Alimentos', 'Fam_Andres', 1400.00, 'Egreso', 'Lima', '2025-01-03', '2025-01-24 05:20:45', 'PENSION SABINA', 'Efectivo'),\
+(141, 2, 'Restaurant', 'Fam_QP', 99.90, 'Egreso', 'Lima', '2025-01-15', '2025-02-06 04:11:13', 'Norkys', 'Efectivo'),\
+(138, 2, 'Combustible', 'Fam_QP', 230.00, 'Egreso', 'Lima', '2025-02-01', '2025-02-06 04:06:28', 'Seguro mam\'e1', 'Efectivo'),\
+(139, 2, 'Salud', 'Fam_Andres', 316.00, 'Egreso', 'Lima', '2025-01-31', '2025-02-06 04:08:47', 'Seguro mam\'e1', 'Efectivo'),\
+(140, 2, 'Gustitos', 'Andr\'e9s', 86.00, 'Egreso', 'Lima', '2025-01-18', '2025-02-06 04:09:31', 'Salida Luis', 'Efectivo'),\
+(142, 2, 'Gustitos', 'Fam_QP', 170.00, 'Egreso', 'Lima', '2025-01-14', '2025-02-06 04:12:15', 'Hotel Ica', 'Efectivo'),\
+(143, 2, 'Combustible', 'Fam_QP', 241.00, 'Egreso', 'Lima', '2025-01-13', '2025-02-06 04:12:51', 'Grifo viaje', 'Efectivo'),\
+(144, 2, 'Combustible', 'Fam_QP', 177.00, 'Egreso', 'Lima', '2025-01-13', '2025-02-06 04:13:32', 'Grifo Puquio', 'Efectivo'),\
+(145, 2, 'Gustitos', 'Fam_QP', 99.50, 'Egreso', 'Lima', '2025-01-12', '2025-02-06 04:14:25', 'Cena Puno', 'Efectivo'),\
+(146, 2, 'Gustitos', 'Fam_QP', 230.00, 'Egreso', 'Lima', '2025-01-10', '2025-02-06 04:15:03', 'Parrilla Cusco', 'Efectivo'),\
+(147, 2, 'Gustitos', 'Fam_QP', 38.00, 'Egreso', 'Lima', '2025-01-10', '2025-02-06 04:15:54', 'Pastel Cusco', 'Tarjeta'),\
+(148, 2, 'Gustitos', 'Fam_QP', 296.00, 'Egreso', 'Lima', '2025-01-10', '2025-02-06 04:16:42', 'Airbnb Puno', 'Efectivo'),\
+(150, 2, 'Gustitos', 'Fam_QP', 141.00, 'Egreso', 'Lima', '2025-01-08', '2025-02-06 04:20:28', 'Almuerzo Machu Picchu', 'Efectivo'),\
+(151, 2, 'Gustitos', 'Fam_QP', 211.24, 'Egreso', 'Lima', '2025-01-08', '2025-02-06 04:21:06', 'Bus Machu Picchu', 'Efectivo'),\
+(152, 2, 'Gustitos', 'Fam_QP', 210.97, 'Egreso', 'Lima', '2025-01-07', '2025-02-06 04:21:53', 'Bus Machu Picchu', 'Efectivo'),\
+(153, 2, 'Gustitos', 'Fam_QP', 167.00, 'Egreso', 'Lima', '2025-01-07', '2025-02-06 04:22:33', 'Almuerzo Machu Picchu', 'Efectivo'),\
+(154, 2, 'Gustitos', 'Fam_QP', 190.00, 'Egreso', 'Lima', '2025-01-06', '2025-02-06 04:23:40', 'Hotel Abancay', 'Efectivo'),\
+(155, 2, 'Combustible', 'Fam_QP', 195.39, 'Egreso', 'Lima', '2025-01-05', '2025-02-06 04:24:35', 'Grifo', 'Efectivo'),\
+(156, 2, 'Gustitos', 'Fam_QP', 62.00, 'Egreso', 'Lima', '2025-01-05', '2025-02-06 04:25:41', 'Botica', 'Efectivo'),\
+(158, 2, 'Gustitos', 'Fam_QP', 153.00, 'Egreso', 'Lima', '2025-01-04', '2025-02-06 04:27:32', 'Almuerzo Canastas Ica', 'Efectivo'),\
+(159, 2, 'Combustible', 'Fam_QP', 244.00, 'Egreso', 'Lima', '2025-01-04', '2025-02-06 04:28:03', 'Combustible', 'Tarjeta'),\
+(160, 2, 'Salud', 'Fam_Andres', 316.00, 'Egreso', 'Lima', '2024-12-31', '2025-02-06 04:28:43', 'Seguro mam\'e1', 'Efectivo'),\
+(161, 2, 'Restaurant', 'Andr\'e9s', 130.00, 'Egreso', 'Lima', '2024-12-30', '2025-02-06 04:29:21', 'Longhorns', 'Efectivo'),\
+(162, 2, 'Gustitos', 'Fam_QP', 57.00, 'Egreso', 'Lima', '2024-12-30', '2025-02-06 04:29:56', 'McDonalds', 'Tarjeta'),\
+(163, 2, 'Recreaci\'f3n', 'Fam_QP', 180.00, 'Egreso', 'Lima', '2024-12-29', '2025-02-06 04:32:08', 'Varios', 'Efectivo'),\
+(164, 2, 'Gustitos', 'Andr\'e9s', 73.00, 'Egreso', 'Lima', '2024-12-22', '2025-02-06 04:32:41', 'Caf\'e9 y queques', 'Efectivo'),\
+(165, 2, 'Servicios', 'Andr\'e9s', 24.00, 'Egreso', 'Lima', '2024-12-22', '2025-02-06 04:33:27', 'Cochera', 'Efectivo'),\
+(166, 2, 'Gustitos', 'Fam_QP', 96.00, 'Egreso', 'Lima', '2024-12-20', '2025-02-06 04:33:54', 'KFC', 'Tarjeta'),\
+(167, 2, 'Gustitos', 'Fam_Yovana', 130.00, 'Egreso', 'Lima', '2024-12-20', '2025-02-06 04:35:03', 'Regalo Diana', 'Efectivo'),\
+(168, 2, 'Gustitos', 'Fam_QP', 462.00, 'Egreso', 'Lima', '2024-12-18', '2025-02-06 04:35:50', 'Parrilla', 'Efectivo'),\
+(169, 2, 'Servicios', 'Andr\'e9s', 511.00, 'Egreso', 'Lima', '2024-12-15', '2025-02-06 04:36:45', 'Avi\'f3n', 'Efectivo'),\
+(170, 2, 'Servicios', 'Andr\'e9s', 270.00, 'Egreso', 'Lima', '2024-12-12', '2025-02-06 04:37:27', 'Avi\'f3n', 'Efectivo'),\
+(171, 2, 'Servicios', 'Fam_QP', 158.00, 'Egreso', 'Lima', '2024-12-10', '2025-02-06 04:38:17', 'Cilamsac', 'Efectivo'),\
+(172, 2, 'Gustitos', 'Fam_QP', 2680.00, 'Egreso', 'Lima', '2025-01-05', '2025-02-06 04:40:54', 'Efectivo viaje', 'Efectivo'),\
+(157, 2, 'Gustitos', 'Fam_QP', 2000.00, 'Egreso', 'Lima', '2025-01-03', '2025-02-06 04:26:46', 'Inkarail', 'Tarjeta'),\
+(149, 2, 'Gustitos', 'Fam_QP', 114.80, 'Egreso', 'Lima', '2025-01-09', '2025-02-06 04:17:32', 'Mediterr\'e1neo', 'Efectivo'),\
+(174, 1, 'Alimentos', 'Fam_QP', 139.00, 'Egreso', 'Lima', '2025-02-06', '2025-02-07 23:55:37', 'Yogurt y frutas', 'Efectivo'),\
+(175, 1, 'Alimentos', 'Fam_QP', 48.50, 'Egreso', 'Lima', '2025-02-07', '2025-02-08 00:00:55', 'Limpieza', 'Efectivo'),\
+(176, 1, 'Alimentos', 'Fam_QP', 40.00, 'Egreso', 'Lima', '2025-02-05', '2025-02-08 00:04:26', 'Desayuno', 'Efectivo'),\
+(177, 1, 'Alimentos', 'Fam_QP', 35.00, 'Egreso', 'Lima', '2025-02-04', '2025-02-08 00:06:31', 'Desayuno', 'Efectivo'),\
+(178, 1, 'Alimentos', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2025-02-03', '2025-02-08 00:07:27', 'Queso y aceite', 'Efectivo'),\
+(179, 1, 'Alimentos', 'Fam_QP', 50.00, 'Egreso', 'Lima', '2025-02-02', '2025-02-08 00:09:13', 'Cena', 'Efectivo'),\
+(180, 1, 'Alimentos', 'Fam_QP', 47.00, 'Egreso', 'Lima', '2025-02-08', '2025-02-09 05:13:21', 'Desayuno', 'Efectivo'),\
+(181, 1, 'Alimentos', 'Fam_QP', 53.00, 'Egreso', 'Lima', '2025-02-09', '2025-02-09 17:14:53', 'Desayuno', 'Efectivo'),\
+(137, 2, 'Sabina', 'Fam_Andres', 1400.00, 'Egreso', 'Lima', '2025-02-02', '2025-02-05 15:03:56', 'Pensi\'f3n', 'Efectivo'),\
+(182, 1, 'Alimentos', 'Fam_QP', 67.00, 'Egreso', 'Lima', '2025-02-09', '2025-02-13 04:44:40', 'Cena y yogurt', 'Efectivo'),\
+(183, 1, 'Alimentos', 'Fam_QP', 36.00, 'Egreso', 'Lima', '2025-02-10', '2025-02-13 04:54:03', 'Desayuno cena', 'Efectivo'),\
+(184, 2, 'Restaurant', 'Fam_QP', 325.00, 'Egreso', 'Lima', '2025-02-15', '2025-02-16 12:37:33', 'Vaquero', 'Efectivo'),\
+(185, 2, 'Combustible', 'Fam_QP', 224.00, 'Egreso', 'Lima', '2025-02-14', '2025-02-16 12:38:03', 'Combustible', 'Efectivo'),\
+(186, 1, 'Alimentos', 'Fam_QP', 35.80, 'Egreso', 'Lima', '2025-02-16', '2025-02-17 01:46:11', 'V\'edveres varios', 'Efectivo'),\
+(187, 1, 'Alimentos', 'Fam_QP', 78.00, 'Egreso', 'Lima', '2025-02-14', '2025-02-17 01:50:50', 'Cena lomo', 'Efectivo'),\
+(188, 1, 'Gustitos', 'Fam_QP', 18.50, 'Egreso', 'Lima', '2025-02-15', '2025-02-17 01:53:02', 'Helados', 'Efectivo'),\
+(189, 1, 'Alimentos', 'Fam_QP', 25.10, 'Egreso', 'Lima', '2025-02-16', '2025-02-17 01:56:20', 'Desayuno Cusco', 'Efectivo'),\
+(190, 1, 'Alimentos', 'Fam_QP', 35.00, 'Egreso', 'Lima', '2025-02-15', '2025-02-17 02:01:55', 'Limpieza', 'Efectivo'),\
+(191, 1, 'Alimentos', 'Fam_QP', 40.00, 'Egreso', 'Lima', '2025-02-13', '2025-02-17 02:25:44', 'Cena chorizo', 'Efectivo'),\
+(193, 1, 'Alimentos', 'Fam_QP', 40.00, 'Egreso', 'Lima', '2025-02-14', '2025-02-17 02:32:21', 'Frutas yogurt', 'Efectivo'),\
+(194, 1, 'Alimentos', 'Fam_QP', 35.00, 'Egreso', 'Lima', '2025-02-11', '2025-02-24 03:32:53', 'Desayuno', 'Efectivo'),\
+(195, 1, 'Alimentos', 'Fam_QP', 40.00, 'Egreso', 'Lima', '2025-02-12', '2025-02-24 03:37:26', 'Limpieza', 'Efectivo'),\
+(196, 1, 'Alimentos', 'Fam_QP', 54.70, 'Egreso', 'Lima', '2025-02-17', '2025-02-24 04:05:55', 'Desayuno', 'Efectivo'),\
+(197, 1, 'Servicios', 'Andr\'e9s', 742.30, 'Egreso', 'Lima', '2025-02-21', '2025-02-24 04:11:49', 'Luz', 'Efectivo'),\
+(198, 1, 'Alimentos', 'Fam_QP', 27.70, 'Egreso', 'Lima', '2025-02-18', '2025-02-24 04:17:29', 'V\'edveres', 'Efectivo'),\
+(199, 1, 'Alimentos', 'Fam_QP', 46.70, 'Egreso', 'Lima', '2025-02-19', '2025-02-24 04:22:32', 'Desayuno', 'Efectivo'),\
+(200, 1, 'Alimentos', 'Fam_QP', 45.00, 'Egreso', 'Lima', '2025-02-20', '2025-02-24 04:25:19', 'Limpieza', 'Efectivo'),\
+(201, 1, 'Alimentos', 'Fam_QP', 29.50, 'Egreso', 'Lima', '2025-02-21', '2025-02-24 04:28:05', 'Taxis', 'Efectivo'),\
+(202, 1, 'Alimentos', 'Fam_QP', 46.00, 'Egreso', 'Lima', '2025-02-22', '2025-02-24 04:30:57', 'Queso', 'Efectivo');\
+\
+-- 3. Sincronizar el contador autom\'e1tico (SEQUENCE) para que los nuevos IDs funcionen bien\
+SELECT setval('public.datagastos_id_seq', (SELECT max(id) FROM public.datagastos));}

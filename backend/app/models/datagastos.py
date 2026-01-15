@@ -16,9 +16,10 @@ class TipoGasto(enum.Enum):
     VARIABLE = "Variable"
     HORMIGA = "Hormiga"
     IMPREVISTO = "Imprevisto"
+    EGRESO = "Egreso"
 
 class ControlGastos(Base):
-    __tablename__ = 'control_gastos'
+    __tablename__ = 'datagastos'
     
     id = Column(Integer, primary_key=True, index=True)
     
